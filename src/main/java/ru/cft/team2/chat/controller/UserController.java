@@ -43,13 +43,13 @@ public class UserController {
 
    @PutMapping("/user/{userId}")
     public ResponseEntity<?> update(@PathVariable(name = "userId") int userId, @RequestBody User user) {
-       User returnedUser = userService.update(user, userId);
-       if (returnedUser == null) {
-           return new ResponseEntity<>(new ErrorHandler("USER_NOT_FOUND"), HttpStatus.INTERNAL_SERVER_ERROR);
-       }
        ErrorHandler returnedRequestStatus = ErrorHandler.handleUserNullData(user);
        if (returnedRequestStatus != null) {
            return new ResponseEntity<>(returnedRequestStatus, HttpStatus.INTERNAL_SERVER_ERROR);
+       }
+       User returnedUser = userService.update(user, userId);
+       if (returnedUser == null) {
+           return new ResponseEntity<>(new ErrorHandler("USER_NOT_FOUND"), HttpStatus.INTERNAL_SERVER_ERROR);
        }
        return new ResponseEntity<>(returnedUser, HttpStatus.OK);
     }
