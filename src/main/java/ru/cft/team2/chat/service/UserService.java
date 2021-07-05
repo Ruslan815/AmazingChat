@@ -11,7 +11,6 @@ public class UserService {
     private Integer idCounter = 0;
 
     public User create(User someUser) {
-
         someUser.setId(idCounter);
         userMap.put(idCounter++, someUser);
         return someUser;

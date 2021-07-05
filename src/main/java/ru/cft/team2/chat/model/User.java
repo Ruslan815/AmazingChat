@@ -1,13 +1,9 @@
 package ru.cft.team2.chat.model;
 
-import javax.persistence.Id;
-
 public class User {
-    @Id
-    Integer id;
-
-    String firstName;
-    String lastName;
+    private Integer id;
+    private String firstName;
+    private String lastName;
 
     public Integer getId() {
         return id;
