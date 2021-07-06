@@ -15,6 +15,7 @@ public class Message {
     @Column(nullable = false)
     private String text;
 
+    @Column(nullable = false)
     private String time;
 
     public Integer getUserId() {
