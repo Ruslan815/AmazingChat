@@ -18,6 +18,14 @@ public class Message {
     @Column(nullable = false)
     private String time;
 
+    public Integer getMessageId() {
+        return messageId;
+    }
+
+    public void setMessageId(Integer messageId) {
+        this.messageId = messageId;
+    }
+
     public Integer getUserId() {
         return userId;
     }
