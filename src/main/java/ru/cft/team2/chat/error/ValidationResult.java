@@ -9,6 +9,7 @@ public enum ValidationResult {
     NOT_FOUND_FIRSTNAME_AND_LASTNAME,
     NOT_FOUND_FIRSTNAME,
     NOT_FOUND_LASTNAME,
+    NOT_FOUND_TEXT,
     NO_ERROR,
     ;
 

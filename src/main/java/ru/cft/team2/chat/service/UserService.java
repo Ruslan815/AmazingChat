@@ -36,4 +36,9 @@ public class UserService {
         }
         return null;
     }
+
+    public boolean isUserExist(Integer userId) {
+        if (userId == null) return false;
+        return userRepository.existsById(userId);
+    }
 }
