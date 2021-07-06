@@ -42,16 +42,16 @@ public class UserController {
                 : new ResponseEntity<>(returnedUser, HttpStatus.OK);
     }
 
-   @PutMapping("/user/{userId}")
+    @PutMapping("/user/{userId}")
     public ResponseEntity<?> update(@PathVariable(name = "userId") int userId, @RequestBody User user) {
-       ValidationResult returnedRequestStatus = ErrorHandler.validateUser(user);
-       if (returnedRequestStatus != ValidationResult.NO_ERROR) {
-           return new ResponseEntity<>(returnedRequestStatus, HttpStatus.INTERNAL_SERVER_ERROR);
-       }
-       User returnedUser = userService.update(user, userId);
-       if (returnedUser == null) {
-           return new ResponseEntity<>(ValidationResult.USER_NOT_FOUND, HttpStatus.INTERNAL_SERVER_ERROR);
-       }
-       return new ResponseEntity<>(returnedUser, HttpStatus.OK);
+        ValidationResult returnedRequestStatus = ErrorHandler.validateUser(user);
+        if (returnedRequestStatus != ValidationResult.NO_ERROR) {
+            return new ResponseEntity<>(returnedRequestStatus, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        User returnedUser = userService.update(user, userId);
+        if (returnedUser == null) {
+            return new ResponseEntity<>(ValidationResult.USER_NOT_FOUND, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return new ResponseEntity<>(returnedUser, HttpStatus.OK);
     }
 }
