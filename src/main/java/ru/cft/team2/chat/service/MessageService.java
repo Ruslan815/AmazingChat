@@ -19,8 +19,8 @@ public class MessageService {
         this.messageRepository = messageRepository;
     }
 
-    public void create(Message someMessage) {
-        messageRepository.save(someMessage);
+    public MessageView create(Message someMessage) {
+        return new MessageView(messageRepository.save(someMessage));
     }
 
     public List<MessageView> getAll() {
