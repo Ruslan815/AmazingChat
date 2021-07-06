@@ -4,8 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ru.cft.team2.chat.model.Message;
+import ru.cft.team2.chat.model.MessageView;
 import ru.cft.team2.chat.repository.MessageRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -21,7 +23,12 @@ public class MessageService {
         messageRepository.save(someMessage);
     }
 
-    public List<Message> getAll() {
-        return messageRepository.findAll(Sort.by(Sort.Direction.DESC, "time"));
+    public List<MessageView> getAll() {
+        List<Message> tempList = messageRepository.findAll(Sort.by(Sort.Direction.DESC, "time"));
+        List<MessageView> responseList = new ArrayList<>();
+        for (Message tempMessage: tempList) {
+            responseList.add(new MessageView(tempMessage));
+        }
+        return responseList;
     }
 }

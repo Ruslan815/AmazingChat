@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.cft.team2.chat.error.ErrorHandler;
 import ru.cft.team2.chat.error.ValidationResult;
 import ru.cft.team2.chat.model.Message;
+import ru.cft.team2.chat.model.MessageView;
 import ru.cft.team2.chat.service.MessageService;
 import ru.cft.team2.chat.service.UserService;
 
@@ -37,7 +38,7 @@ public class MessageController {
     }
 
     @GetMapping("/messages")
-    public List<Message> read() {
+    public List<MessageView> read() {
         return messageService.getAll();
     }
 }

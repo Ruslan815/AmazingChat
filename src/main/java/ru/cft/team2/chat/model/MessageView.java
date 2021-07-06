@@ -1,21 +1,15 @@
 package ru.cft.team2.chat.model;
 
-import javax.persistence.*;
-
-@Entity(name = "messages")
-public class Message {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer messageId;
-
-    @Column(nullable = false)
+public class MessageView {
     private Integer userId;
-
-    @Column(nullable = false)
     private String text;
-
     private String time;
+
+    public MessageView(Message message) {
+        this.setUserId(message.getUserId());
+        this.setText(message.getText());
+        this.setTime(message.getTime());
+    }
 
     public Integer getUserId() {
         return userId;
