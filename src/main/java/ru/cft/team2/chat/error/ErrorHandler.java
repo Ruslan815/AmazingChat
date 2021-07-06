@@ -1,9 +1,22 @@
 package ru.cft.team2.chat.error;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import ru.cft.team2.chat.model.Message;
 import ru.cft.team2.chat.model.User;
 
+@ControllerAdvice
 public class ErrorHandler {
+
+    @ExceptionHandler(Throwable.class)
+    @ResponseStatus(code = HttpStatus.INTERNAL_SERVER_ERROR)
+    @ResponseBody
+    public ValidationResult handleAnyException(Throwable exception) {
+        return ValidationResult.UNKNOWN_ERROR;
+    }
 
     public static ValidationResult validateUser(User someUser) {
         if (someUser.getFirstName() == null && someUser.getLastName() == null) {

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum ValidationResult {
+    UNKNOWN_ERROR,
     USER_NOT_FOUND,
     NOT_FOUND_FIRSTNAME_AND_LASTNAME,
     NOT_FOUND_FIRSTNAME,
