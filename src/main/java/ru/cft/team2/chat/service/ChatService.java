@@ -5,6 +5,9 @@ import ru.cft.team2.chat.model.Chat;
 import ru.cft.team2.chat.model.ChatView;
 import ru.cft.team2.chat.repository.ChatRepository;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 public class ChatService {
     private final ChatRepository chatRepository;
@@ -18,5 +21,14 @@ public class ChatService {
             throw new Exception();
         }
         return new ChatView(chatRepository.save(someChat));
+    }
+
+    public List<ChatView> getAll() {
+        List<Chat> tempList = chatRepository.findAll();
+        List<ChatView> responseList = new ArrayList<>();
+        for (Chat tempChat: tempList) {
+            responseList.add(new ChatView(tempChat));
+        }
+        return responseList;
     }
 }
