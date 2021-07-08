@@ -5,6 +5,7 @@ import ru.cft.team2.chat.model.Chat;
 import ru.cft.team2.chat.model.ChatView;
 import ru.cft.team2.chat.repository.ChatRepository;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,5 +31,20 @@ public class ChatService {
             responseList.add(new ChatView(tempChat));
         }
         return responseList;
+    }
+
+    @Transactional
+    public boolean enterChat(Integer userId, Integer chatId) {
+        Chat chat = chatRepository.getById(chatId);
+        boolean isUserAlreadyInChat = chat.getChatMembers().add(userId);
+        if (!isUserAlreadyInChat) {
+            chatRepository.save(chat);
+        }
+        return isUserAlreadyInChat;
+    }
+
+    public boolean isChatExist (Integer chatId) {
+        if (chatId == null) return false;
+        return chatRepository.existsById(chatId);
     }
 }
