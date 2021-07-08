@@ -35,9 +35,11 @@ public class UserController {
     @GetMapping("/user/{userId}")
     public ResponseEntity<?> get(@PathVariable(name = "userId") int userId) {
         User returnedUser = userService.get(userId);
-        return returnedUser == null
-                ? new ResponseEntity<>(ValidationResult.USER_NOT_FOUND, HttpStatus.INTERNAL_SERVER_ERROR)
-                : new ResponseEntity<>(returnedUser, HttpStatus.OK);
+        if (returnedUser == null) {
+            return new ResponseEntity<>(ValidationResult.USER_NOT_FOUND, HttpStatus.INTERNAL_SERVER_ERROR);
+        } else {
+            return new ResponseEntity<>(returnedUser, HttpStatus.OK);
+        }
     }
 
     @PutMapping("/user/{userId}")
