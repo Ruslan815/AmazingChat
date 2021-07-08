@@ -43,6 +43,16 @@ public class ChatService {
         return isUserAlreadyInChat;
     }
 
+    @Transactional
+    public boolean leaveChat(Integer userId, Integer chatId) {
+        Chat chat = chatRepository.getById(chatId);
+        boolean isUserAlreadyInChat = chat.getChatMembers().remove(chatId);
+        if (isUserAlreadyInChat) {
+            chatRepository.save(chat);
+        }
+        return isUserAlreadyInChat;
+    }
+
     public boolean isChatExist (Integer chatId) {
         if (chatId == null) return false;
         return chatRepository.existsById(chatId);

@@ -57,4 +57,24 @@ public class ChatController {
         }
         return response;
     }
+
+    @PostMapping("/chat/leave")
+    public ResponseEntity<?> leaveChat(@RequestBody ChatMember chatMember) {
+        ResponseEntity response;
+        Integer userId = chatMember.getUserId();
+        Integer chatId = chatMember.getChatId();
+
+        if (!userService.isUserExist(userId)) {
+            response = new ResponseEntity<>(ValidationResult.USER_NOT_FOUND, HttpStatus.INTERNAL_SERVER_ERROR);
+        } else if (!chatService.isChatExist(chatId)) {
+            response = new ResponseEntity<>(ValidationResult.NOT_FOUND_CHAT, HttpStatus.INTERNAL_SERVER_ERROR);
+        } else {
+            if (chatService.leaveChat(userId, chatId)) {
+                response = ResponseEntity.ok("You left the chat №" + chatId);
+            } else {
+                response = new ResponseEntity<>(ValidationResult.USER_NOT_IN_CHAT, HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+        }
+        return response;
+    }
 }
