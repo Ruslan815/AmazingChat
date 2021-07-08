@@ -1,6 +1,5 @@
 package ru.cft.team2.chat.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import ru.cft.team2.chat.model.User;
 import org.springframework.stereotype.Service;
 import ru.cft.team2.chat.repository.UserRepository;
@@ -12,7 +11,6 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-    @Autowired
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }

@@ -1,6 +1,5 @@
 package ru.cft.team2.chat.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ru.cft.team2.chat.model.Message;
@@ -14,7 +13,6 @@ import java.util.List;
 public class MessageService {
     private final MessageRepository messageRepository;
 
-    @Autowired
     public MessageService(MessageRepository messageRepository) {
         this.messageRepository = messageRepository;
     }
