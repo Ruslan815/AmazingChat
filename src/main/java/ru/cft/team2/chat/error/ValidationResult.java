@@ -11,6 +11,7 @@ public enum ValidationResult {
     NOT_FOUND_FIRSTNAME,
     NOT_FOUND_LASTNAME,
     NOT_FOUND_TEXT,
+    NOT_FOUND_CHAT_NAME,
     NO_ERROR,
     ;
 

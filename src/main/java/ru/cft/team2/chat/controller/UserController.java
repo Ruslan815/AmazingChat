@@ -24,7 +24,7 @@ public class UserController {
         if (returnedRequestStatus != ValidationResult.NO_ERROR) {
             return new ResponseEntity<>(returnedRequestStatus, HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        return new ResponseEntity<>(userService.create(user), HttpStatus.OK);
+        return ResponseEntity.ok(userService.create(user));
     }
 
     @GetMapping("/users")
@@ -40,7 +40,7 @@ public class UserController {
         } catch (Exception e) {
             return new ResponseEntity<>(ValidationResult.USER_NOT_FOUND, HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        return new ResponseEntity<>(returnedUser, HttpStatus.OK);
+        return ResponseEntity.ok(returnedUser);
     }
 
     @PutMapping("/user/{userId}")
@@ -51,7 +51,7 @@ public class UserController {
             User returnedUser;
             try {
                 returnedUser = userService.update(user, userId);
-                response = new ResponseEntity<>(returnedUser, HttpStatus.OK);
+                response = ResponseEntity.ok(returnedUser);
             } catch (Exception e) {
                 response = new ResponseEntity<>(ValidationResult.USER_NOT_FOUND, HttpStatus.INTERNAL_SERVER_ERROR);
             }
