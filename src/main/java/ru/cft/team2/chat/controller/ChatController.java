@@ -28,7 +28,7 @@ public class ChatController {
         try {
             response = chatService.create(someChat);
         } catch (Exception e) {
-            return new ResponseEntity<>(ValidationResult.NOT_FOUND_CHAT_NAME, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(ValidationResult.CHAT_NAME_NOT_FOUND, HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return ResponseEntity.ok(response);
     }
@@ -47,7 +47,7 @@ public class ChatController {
         if (!userService.isUserExist(userId)) {
             response = new ResponseEntity<>(ValidationResult.USER_NOT_FOUND, HttpStatus.INTERNAL_SERVER_ERROR);
         } else if (!chatService.isChatExist(chatId)) {
-            response = new ResponseEntity<>(ValidationResult.NOT_FOUND_CHAT, HttpStatus.INTERNAL_SERVER_ERROR);
+            response = new ResponseEntity<>(ValidationResult.CHAT_NOT_FOUND, HttpStatus.INTERNAL_SERVER_ERROR);
         } else {
             if (chatService.enterChat(userId, chatId)) {
                 response = ResponseEntity.ok("You entered the chat №" + chatId);
@@ -67,7 +67,7 @@ public class ChatController {
         if (!userService.isUserExist(userId)) {
             response = new ResponseEntity<>(ValidationResult.USER_NOT_FOUND, HttpStatus.INTERNAL_SERVER_ERROR);
         } else if (!chatService.isChatExist(chatId)) {
-            response = new ResponseEntity<>(ValidationResult.NOT_FOUND_CHAT, HttpStatus.INTERNAL_SERVER_ERROR);
+            response = new ResponseEntity<>(ValidationResult.CHAT_NOT_FOUND, HttpStatus.INTERNAL_SERVER_ERROR);
         } else {
             if (chatService.leaveChat(userId, chatId)) {
                 response = ResponseEntity.ok("You left the chat №" + chatId);

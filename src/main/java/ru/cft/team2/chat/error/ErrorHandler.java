@@ -20,11 +20,11 @@ public class ErrorHandler {
 
     public static ValidationResult validateUser(User someUser) {
         if (someUser.getFirstName() == null && someUser.getLastName() == null) {
-            return ValidationResult.NOT_FOUND_FIRSTNAME_AND_LASTNAME;
+            return ValidationResult.FIRSTNAME_AND_LASTNAME_NOT_FOUND;
         } else if (someUser.getFirstName() == null) {
-            return ValidationResult.NOT_FOUND_FIRSTNAME;
+            return ValidationResult.FIRSTNAME_NOT_FOUND;
         } else if (someUser.getLastName() == null) {
-            return ValidationResult.NOT_FOUND_LASTNAME;
+            return ValidationResult.LASTNAME_NOT_FOUND;
         }
         return ValidationResult.NO_ERROR;
     }
@@ -34,7 +34,7 @@ public class ErrorHandler {
             return ValidationResult.USER_NOT_FOUND;
         }
         if (someMessage.getText() == null) {
-            return ValidationResult.NOT_FOUND_TEXT;
+            return ValidationResult.TEXT_NOT_FOUND;
         }
         return ValidationResult.NO_ERROR;
     }
