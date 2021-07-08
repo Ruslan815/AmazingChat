@@ -24,15 +24,15 @@ public class UserService {
     }
 
     public User get(int userId) {
-        return userRepository.findById(userId).orElse(null);
+        return userRepository.findById(userId).orElseThrow();
     }
 
-    public User update(User someUser, int userId) {
+    public User update(User someUser, int userId) throws Exception {
         if (userRepository.existsById(userId)) {
             someUser.setId(userId);
             return userRepository.save(someUser);
         }
-        return null;
+        throw new Exception();
     }
 
     public boolean isUserExist(Integer userId) {

@@ -34,8 +34,10 @@ public class UserController {
 
     @GetMapping("/user/{userId}")
     public ResponseEntity<?> get(@PathVariable(name = "userId") int userId) {
-        User returnedUser = userService.get(userId);
-        if (returnedUser == null) {
+        User returnedUser;
+        try {
+            returnedUser = userService.get(userId);
+        } catch (Exception e) {
             return new ResponseEntity<>(ValidationResult.USER_NOT_FOUND, HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return new ResponseEntity<>(returnedUser, HttpStatus.OK);
@@ -46,11 +48,12 @@ public class UserController {
         ResponseEntity<?> response;
         ValidationResult returnedRequestStatus = ErrorHandler.validateUser(user);
         if (returnedRequestStatus == ValidationResult.NO_ERROR) {
-            User returnedUser = userService.update(user, userId);
-            if (returnedUser == null) {
-                response = new ResponseEntity<>(ValidationResult.USER_NOT_FOUND, HttpStatus.INTERNAL_SERVER_ERROR);
-            } else {
+            User returnedUser;
+            try {
+                returnedUser = userService.update(user, userId);
                 response = new ResponseEntity<>(returnedUser, HttpStatus.OK);
+            } catch (Exception e) {
+                response = new ResponseEntity<>(ValidationResult.USER_NOT_FOUND, HttpStatus.INTERNAL_SERVER_ERROR);
             }
         } else {
             response = new ResponseEntity<>(returnedRequestStatus, HttpStatus.INTERNAL_SERVER_ERROR);
