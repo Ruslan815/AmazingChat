@@ -53,6 +53,11 @@ public class ChatService {
         return isUserAlreadyInChat;
     }
 
+    public boolean isUserInChat(Integer userId, Integer chatId) {
+        Chat chat = chatRepository.getById(chatId);
+        return chat.getChatMembers().contains(userId);
+    }
+
     public boolean isChatExist (Integer chatId) {
         if (chatId == null) return false;
         return chatRepository.existsById(chatId);

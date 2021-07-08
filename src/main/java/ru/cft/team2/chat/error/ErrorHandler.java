@@ -29,12 +29,15 @@ public class ErrorHandler {
         return ValidationResult.NO_ERROR;
     }
 
-    public static ValidationResult validateMessage(Message someMessage, boolean isUserExist) {
+    public static ValidationResult validateMessage(Message someMessage, boolean isUserExist, boolean isChatExist) {
         if (!isUserExist) {
             return ValidationResult.USER_NOT_FOUND;
         }
         if (someMessage.getText() == null) {
             return ValidationResult.TEXT_NOT_FOUND;
+        }
+        if (!isChatExist) {
+            return ValidationResult.CHAT_NOT_FOUND;
         }
         return ValidationResult.NO_ERROR;
     }
