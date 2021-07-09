@@ -3,6 +3,7 @@ package ru.cft.team2.chat.service;
 import org.springframework.stereotype.Service;
 import ru.cft.team2.chat.model.Chat;
 import ru.cft.team2.chat.model.ChatView;
+import ru.cft.team2.chat.model.User;
 import ru.cft.team2.chat.repository.ChatRepository;
 
 import javax.transaction.Transactional;
@@ -34,29 +35,29 @@ public class ChatService {
     }
 
     @Transactional
-    public boolean enterChat(Integer userId, Integer chatId) {
+    public boolean enterChat(User user, Integer chatId) {
         Chat chat = chatRepository.getById(chatId);
-        boolean isUserAlreadyInChat = chat.getChatMembers().add(userId);
-        if (!isUserAlreadyInChat) {
+        boolean isUserNotInChat = chat.getChatMembers().add(user);
+        if (isUserNotInChat) {
             chatRepository.save(chat);
         }
-        return isUserAlreadyInChat;
+        return isUserNotInChat;
     }
 
     @Transactional
-    public boolean leaveChat(Integer userId, Integer chatId) {
+    public boolean leaveChat(User user, Integer chatId) {
         Chat chat = chatRepository.getById(chatId);
-        boolean isUserAlreadyInChat = chat.getChatMembers().remove(chatId);
+        boolean isUserAlreadyInChat = chat.getChatMembers().remove(user);
         if (isUserAlreadyInChat) {
             chatRepository.save(chat);
         }
         return isUserAlreadyInChat;
     }
 
-    public boolean isUserInPrivateChat(Integer userId, Integer chatId) {
+    public boolean isUserInPrivateChat(User user, Integer chatId) {
         if (this.isPrivateChatExist(chatId)) {
             Chat chat = chatRepository.getById(chatId);
-            return chat.getChatMembers().contains(userId);
+            return chat.getChatMembers().contains(user);
         }
         return false;
     }

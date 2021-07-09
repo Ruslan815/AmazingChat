@@ -13,8 +13,8 @@ public class Chat {
     @Column
     private String name;
 
-    @ElementCollection
-    private Set<Integer> chatMembers = new HashSet<>();
+    @ManyToMany(fetch = FetchType.LAZY)
+    private Set<User> chatMembers = new HashSet<>();
 
     public Integer getChatId() {
         return chatId;
@@ -32,11 +32,11 @@ public class Chat {
         this.name = name;
     }
 
-    public Set<Integer> getChatMembers() {
+    public Set<User> getChatMembers() {
         return chatMembers;
     }
 
-    public void setChatMembers(Set<Integer> chatMembers) {
+    public void setChatMembers(Set<User> chatMembers) {
         this.chatMembers = chatMembers;
     }
 }

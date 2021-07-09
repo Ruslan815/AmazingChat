@@ -1,6 +1,5 @@
 package ru.cft.team2.chat.controller;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.cft.team2.chat.error.ErrorHandler;
@@ -34,7 +33,7 @@ public class MessageController {
         boolean isUserInChat = true;
         if (chatId != null) {
             isChatExist = chatService.isPrivateChatExist(chatId);
-            isUserInChat = chatService.isUserInPrivateChat(userId, chatId);
+            isUserInChat = chatService.isUserInPrivateChat(userService.get(userId), chatId);
         }
 
         ValidationResult returnedRequestStatus = ErrorHandler.validateMessage(someMessage, isUserExist, isChatExist, isUserInChat);

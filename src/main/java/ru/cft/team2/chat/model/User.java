@@ -1,7 +1,9 @@
 package ru.cft.team2.chat.model;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity(name = "users")
 public class User {
@@ -14,6 +16,9 @@ public class User {
 
     @Column(nullable = false)
     private String lastName;
+
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "chatMembers")
+    private Set<Chat> availableChats = new HashSet<>();
 
     public User() {}
 
@@ -45,6 +50,14 @@ public class User {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public Set<Chat> getAvailableChats() {
+        return availableChats;
+    }
+
+    public void setAvailableChats(Set<Chat> availableChats) {
+        this.availableChats = availableChats;
     }
 
     @Override
