@@ -1,10 +1,8 @@
 package ru.cft.team2.chat.controller;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import ru.cft.team2.chat.error.ErrorHandler;
 import ru.cft.team2.chat.error.ValidationResult;
 import ru.cft.team2.chat.model.Message;
@@ -52,7 +50,10 @@ public class MessageController {
     }
 
     @GetMapping("/messages")
-    public List<MessageView> read() {
-        return messageService.getAll();
+    public ResponseEntity<?> read(@RequestParam(required = false) Integer chatId) {
+        if (chatId == null || chatService.isPrivateChatExist(chatId)) {
+            return ResponseEntity.ok(messageService.getAllByChatId(chatId));
+        }
+        return new ResponseEntity<>(ValidationResult.CHAT_NOT_FOUND, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
