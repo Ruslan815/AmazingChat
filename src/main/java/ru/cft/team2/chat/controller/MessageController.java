@@ -52,6 +52,6 @@ public class MessageController {
         if (chatId == null || chatService.isPrivateChatExist(chatId)) {
             return ResponseEntity.ok(messageService.getAllByChatId(chatId));
         }
-        return new ResponseEntity<>(ValidationResult.CHAT_NOT_FOUND, HttpStatus.INTERNAL_SERVER_ERROR);
+        return ResponseEntity.internalServerError().body(ValidationResult.CHAT_NOT_FOUND);
     }
 }

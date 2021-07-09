@@ -1,6 +1,5 @@
 package ru.cft.team2.chat.controller;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.cft.team2.chat.error.ValidationResult;
@@ -28,7 +27,7 @@ public class ChatController {
         try {
             response = chatService.create(someChat);
         } catch (Exception e) {
-            return new ResponseEntity<>(ValidationResult.CHAT_NAME_NOT_FOUND, HttpStatus.INTERNAL_SERVER_ERROR);
+            return ResponseEntity.internalServerError().body(ValidationResult.CHAT_NAME_NOT_FOUND);
         }
         return ResponseEntity.ok(response);
     }
@@ -45,14 +44,14 @@ public class ChatController {
         Integer chatId = chatMember.getChatId();
 
         if (!userService.isUserExist(userId)) {
-            response = new ResponseEntity<>(ValidationResult.USER_NOT_FOUND, HttpStatus.INTERNAL_SERVER_ERROR);
+            response = ResponseEntity.internalServerError().body(ValidationResult.USER_NOT_FOUND);
         } else if (!chatService.isPrivateChatExist(chatId)) {
-            response = new ResponseEntity<>(ValidationResult.CHAT_NOT_FOUND, HttpStatus.INTERNAL_SERVER_ERROR);
+            response = ResponseEntity.internalServerError().body(ValidationResult.CHAT_NOT_FOUND);
         } else {
             if (chatService.enterChat(userId, chatId)) {
                 response = ResponseEntity.ok("You entered the chat №" + chatId);
             } else {
-                response = new ResponseEntity<>(ValidationResult.USER_ALREADY_IN_CHAT, HttpStatus.INTERNAL_SERVER_ERROR);
+                response = ResponseEntity.internalServerError().body(ValidationResult.USER_ALREADY_IN_CHAT);
             }
         }
         return response;
@@ -65,14 +64,14 @@ public class ChatController {
         Integer chatId = chatMember.getChatId();
 
         if (!userService.isUserExist(userId)) {
-            response = new ResponseEntity<>(ValidationResult.USER_NOT_FOUND, HttpStatus.INTERNAL_SERVER_ERROR);
+            response = ResponseEntity.internalServerError().body(ValidationResult.USER_NOT_FOUND);
         } else if (!chatService.isPrivateChatExist(chatId)) {
-            response = new ResponseEntity<>(ValidationResult.CHAT_NOT_FOUND, HttpStatus.INTERNAL_SERVER_ERROR);
+            response = ResponseEntity.internalServerError().body(ValidationResult.CHAT_NOT_FOUND);
         } else {
             if (chatService.leaveChat(userId, chatId)) {
                 response = ResponseEntity.ok("You left the chat №" + chatId);
             } else {
-                response = new ResponseEntity<>(ValidationResult.USER_NOT_IN_CHAT, HttpStatus.INTERNAL_SERVER_ERROR);
+                response = ResponseEntity.internalServerError().body(ValidationResult.USER_NOT_IN_CHAT);
             }
         }
         return response;

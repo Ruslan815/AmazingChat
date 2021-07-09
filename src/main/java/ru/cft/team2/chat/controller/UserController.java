@@ -1,6 +1,5 @@
 package ru.cft.team2.chat.controller;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.cft.team2.chat.error.ValidationResult;
@@ -22,7 +21,7 @@ public class UserController {
     public ResponseEntity<?> create(@RequestBody User user) {
         ValidationResult returnedRequestStatus = ErrorHandler.validateUser(user);
         if (returnedRequestStatus != ValidationResult.NO_ERROR) {
-            return new ResponseEntity<>(returnedRequestStatus, HttpStatus.INTERNAL_SERVER_ERROR);
+            return ResponseEntity.internalServerError().body(returnedRequestStatus);
         }
         return ResponseEntity.ok(userService.create(user));
     }
@@ -38,7 +37,7 @@ public class UserController {
         try {
             returnedUser = userService.get(userId);
         } catch (Exception e) {
-            return new ResponseEntity<>(ValidationResult.USER_NOT_FOUND, HttpStatus.INTERNAL_SERVER_ERROR);
+            return ResponseEntity.internalServerError().body(ValidationResult.USER_NOT_FOUND);
         }
         return ResponseEntity.ok(returnedUser);
     }
@@ -53,10 +52,10 @@ public class UserController {
                 returnedUser = userService.update(user, userId);
                 response = ResponseEntity.ok(returnedUser);
             } catch (Exception e) {
-                response = new ResponseEntity<>(ValidationResult.USER_NOT_FOUND, HttpStatus.INTERNAL_SERVER_ERROR);
+                response = ResponseEntity.internalServerError().body(ValidationResult.USER_NOT_FOUND);
             }
         } else {
-            response = new ResponseEntity<>(returnedRequestStatus, HttpStatus.INTERNAL_SERVER_ERROR);
+            response = ResponseEntity.internalServerError().body(returnedRequestStatus);
         }
         return response;
     }
