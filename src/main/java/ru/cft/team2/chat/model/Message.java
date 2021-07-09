@@ -12,7 +12,6 @@ public class Message {
     @Column(nullable = false)
     private Integer userId;
 
-    @Column
     private Integer chatId;
 
     @Column(nullable = false)

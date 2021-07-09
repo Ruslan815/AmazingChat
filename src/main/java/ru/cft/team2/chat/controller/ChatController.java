@@ -1,5 +1,8 @@
 package ru.cft.team2.chat.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.cft.team2.chat.error.ValidationResult;
@@ -49,7 +52,13 @@ public class ChatController {
             response = ResponseEntity.internalServerError().body(ValidationResult.CHAT_NOT_FOUND);
         } else {
             if (chatService.enterChat(userId, chatId)) {
-                response = ResponseEntity.ok("You entered the chat №" + chatId);
+                ObjectMapper objectMapper = new ObjectMapper();
+                try {
+                    JsonNode jsonResponse = objectMapper.readTree("{\"enterStatus\": \"You successful entered the chat №" + chatId + "\"}");
+                    response = ResponseEntity.ok(jsonResponse);
+                } catch (JsonProcessingException e) {
+                    response = ResponseEntity.internalServerError().body(ValidationResult.UNKNOWN_ERROR);
+                }
             } else {
                 response = ResponseEntity.internalServerError().body(ValidationResult.USER_ALREADY_IN_CHAT);
             }
@@ -69,7 +78,13 @@ public class ChatController {
             response = ResponseEntity.internalServerError().body(ValidationResult.CHAT_NOT_FOUND);
         } else {
             if (chatService.leaveChat(userId, chatId)) {
-                response = ResponseEntity.ok("You left the chat №" + chatId);
+                ObjectMapper objectMapper = new ObjectMapper();
+                try {
+                    JsonNode jsonResponse = objectMapper.readTree("{\"leaveStatus\": \"You successful left the chat №" + chatId + "\"}");
+                    response = ResponseEntity.ok(jsonResponse);
+                } catch (JsonProcessingException e) {
+                    response = ResponseEntity.internalServerError().body(ValidationResult.UNKNOWN_ERROR);
+                }
             } else {
                 response = ResponseEntity.internalServerError().body(ValidationResult.USER_NOT_IN_CHAT);
             }
