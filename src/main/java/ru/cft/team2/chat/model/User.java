@@ -1,6 +1,7 @@
 package ru.cft.team2.chat.model;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity(name = "users")
 public class User {
@@ -13,6 +14,14 @@ public class User {
 
     @Column(nullable = false)
     private String lastName;
+
+    public User() {}
+
+    public User(Integer id, String firstName, String lastName) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+    }
 
     public Integer getId() {
         return id;
@@ -40,10 +49,23 @@ public class User {
 
     @Override
     public String toString() {
-        return "User {\n" +
-                "\tid:\"" + id + "\",\n" +
-                "\t\"firstName\":\"" + firstName + "\",\n" +
-                "\t\"lastName\":\"" + lastName + "\"\n" +
-                "}";
+        return "User{" +
+                "id=" + id +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return Objects.equals(id, user.id) && Objects.equals(firstName, user.firstName) && Objects.equals(lastName, user.lastName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, firstName, lastName);
     }
 }
