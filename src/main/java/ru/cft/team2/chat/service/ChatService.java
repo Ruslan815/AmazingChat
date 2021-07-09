@@ -27,7 +27,7 @@ public class ChatService {
     public List<ChatView> getAll() {
         List<Chat> tempList = chatRepository.findAll();
         List<ChatView> responseList = new ArrayList<>();
-        for (Chat tempChat: tempList) {
+        for (Chat tempChat : tempList) {
             responseList.add(new ChatView(tempChat));
         }
         return responseList;
@@ -53,12 +53,15 @@ public class ChatService {
         return isUserAlreadyInChat;
     }
 
-    public boolean isUserInChat(Integer userId, Integer chatId) {
-        Chat chat = chatRepository.getById(chatId);
-        return chat.getChatMembers().contains(userId);
+    public boolean isUserInPrivateChat(Integer userId, Integer chatId) {
+        if (this.isPrivateChatExist(chatId)) {
+            Chat chat = chatRepository.getById(chatId);
+            return chat.getChatMembers().contains(userId);
+        }
+        return false;
     }
 
-    public boolean isChatExist (Integer chatId) {
+    public boolean isPrivateChatExist(Integer chatId) {
         if (chatId == null) return false;
         return chatRepository.existsById(chatId);
     }

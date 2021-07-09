@@ -46,7 +46,7 @@ public class ChatController {
 
         if (!userService.isUserExist(userId)) {
             response = new ResponseEntity<>(ValidationResult.USER_NOT_FOUND, HttpStatus.INTERNAL_SERVER_ERROR);
-        } else if (!chatService.isChatExist(chatId)) {
+        } else if (!chatService.isPrivateChatExist(chatId)) {
             response = new ResponseEntity<>(ValidationResult.CHAT_NOT_FOUND, HttpStatus.INTERNAL_SERVER_ERROR);
         } else {
             if (chatService.enterChat(userId, chatId)) {
@@ -66,7 +66,7 @@ public class ChatController {
 
         if (!userService.isUserExist(userId)) {
             response = new ResponseEntity<>(ValidationResult.USER_NOT_FOUND, HttpStatus.INTERNAL_SERVER_ERROR);
-        } else if (!chatService.isChatExist(chatId)) {
+        } else if (!chatService.isPrivateChatExist(chatId)) {
             response = new ResponseEntity<>(ValidationResult.CHAT_NOT_FOUND, HttpStatus.INTERNAL_SERVER_ERROR);
         } else {
             if (chatService.leaveChat(userId, chatId)) {

@@ -29,7 +29,7 @@ public class ErrorHandler {
         return ValidationResult.NO_ERROR;
     }
 
-    public static ValidationResult validateMessage(Message someMessage, boolean isUserExist, boolean isChatExist) {
+    public static ValidationResult validateMessage(Message someMessage, boolean isUserExist, boolean isChatExist, boolean isUserInChat) {
         if (!isUserExist) {
             return ValidationResult.USER_NOT_FOUND;
         }
@@ -38,6 +38,9 @@ public class ErrorHandler {
         }
         if (!isChatExist) {
             return ValidationResult.CHAT_NOT_FOUND;
+        }
+        if (!isUserInChat) {
+            return ValidationResult.USER_NOT_IN_CHAT;
         }
         return ValidationResult.NO_ERROR;
     }

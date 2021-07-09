@@ -31,23 +31,20 @@ public class MessageController {
 
     @PostMapping("/message")
     public ResponseEntity<?> create(@RequestBody Message someMessage) {
-        boolean isChatIdCorrect;
-        // TODO vars
-        if (someMessage.getChatId() != null) {
-            isChatIdCorrect = chatService.isChatExist(someMessage.getChatId());
-        } else {
-            isChatIdCorrect = true;
+        Integer userId = someMessage.getUserId();
+        Integer chatId = someMessage.getChatId();
+        boolean isUserExist = userService.isUserExist(userId);
+        boolean isChatExist = true;
+        boolean isUserInChat = true;
+        if (chatId != null) {
+            isChatExist = chatService.isPrivateChatExist(chatId);
+            isUserInChat = chatService.isUserInPrivateChat(userId, chatId);
         }
 
-        ValidationResult returnedRequestStatus = ErrorHandler.validateMessage(someMessage,
-                userService.isUserExist(someMessage.getUserId()), isChatIdCorrect);
+        ValidationResult returnedRequestStatus = ErrorHandler.validateMessage(someMessage, isUserExist, isChatExist, isUserInChat);
         if (returnedRequestStatus != ValidationResult.NO_ERROR) {
             return ResponseEntity.internalServerError().body(returnedRequestStatus);
-        } else if (!chatService.isUserInChat(someMessage.getUserId(), someMessage.getChatId())) {
-            return ResponseEntity.internalServerError().body(ValidationResult.USER_NOT_IN_CHAT);
         }
-
-
 
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         someMessage.setTime(formatter.format(new Date()));
