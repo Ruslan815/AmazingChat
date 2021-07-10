@@ -51,7 +51,7 @@ public class ChatController {
         } else if (!chatService.isPrivateChatExist(chatId)) {
             response = ResponseEntity.internalServerError().body(ValidationResult.CHAT_NOT_FOUND);
         } else {
-            if (chatService.enterChat(userService.get(userId), chatId)) {
+            if (chatService.enterChat(userService.getUser(userId), chatId)) {
                 ObjectMapper objectMapper = new ObjectMapper();
                 try {
                     JsonNode jsonResponse = objectMapper.readTree("{\"enterStatus\": \"You successful entered the chat №" + chatId + "\"}");
@@ -77,7 +77,7 @@ public class ChatController {
         } else if (!chatService.isPrivateChatExist(chatId)) {
             response = ResponseEntity.internalServerError().body(ValidationResult.CHAT_NOT_FOUND);
         } else {
-            if (chatService.leaveChat(userService.get(userId), chatId)) {
+            if (chatService.leaveChat(userService.getUser(userId), chatId)) {
                 ObjectMapper objectMapper = new ObjectMapper();
                 try {
                     JsonNode jsonResponse = objectMapper.readTree("{\"leaveStatus\": \"You successful left the chat №" + chatId + "\"}");

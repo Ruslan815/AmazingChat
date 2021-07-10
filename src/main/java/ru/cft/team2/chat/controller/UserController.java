@@ -4,6 +4,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.cft.team2.chat.error.ValidationResult;
 import ru.cft.team2.chat.model.User;
+import ru.cft.team2.chat.model.UserView;
 import ru.cft.team2.chat.service.UserService;
 import ru.cft.team2.chat.error.ErrorHandler;
 
@@ -27,15 +28,15 @@ public class UserController {
     }
 
     @GetMapping("/users")
-    public List<User> read() {
-        return userService.getAll();
+    public List<UserView> read() {
+        return userService.getAllUserViews();
     }
 
     @GetMapping("/user/{userId}")
     public ResponseEntity<?> get(@PathVariable(name = "userId") int userId) {
-        User returnedUser;
+        UserView returnedUser;
         try {
-            returnedUser = userService.get(userId);
+            returnedUser = userService.getUserView(userId);
         } catch (Exception e) {
             return ResponseEntity.internalServerError().body(ValidationResult.USER_NOT_FOUND);
         }
@@ -47,7 +48,7 @@ public class UserController {
         ResponseEntity<?> response;
         ValidationResult returnedRequestStatus = ErrorHandler.validateUser(user);
         if (returnedRequestStatus == ValidationResult.NO_ERROR) {
-            User returnedUser;
+            UserView returnedUser;
             try {
                 returnedUser = userService.update(user, userId);
                 response = ResponseEntity.ok(returnedUser);
