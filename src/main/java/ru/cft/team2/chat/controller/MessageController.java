@@ -33,7 +33,7 @@ public class MessageController {
         boolean isUserInChat = true;
         if (chatId != null) {
             isChatExist = chatService.isPrivateChatExist(chatId);
-            isUserInChat = chatService.isUserInPrivateChat(userService.get(userId), chatId);
+            isUserInChat = chatService.isUserInPrivateChat(userService.getUser(userId), chatId);
         }
 
         ValidationResult returnedRequestStatus = ErrorHandler.validateMessage(someMessage, isUserExist, isChatExist, isUserInChat);
