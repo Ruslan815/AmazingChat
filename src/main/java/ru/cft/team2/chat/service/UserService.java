@@ -1,13 +1,12 @@
 package ru.cft.team2.chat.service;
 
-import ru.cft.team2.chat.model.Chat;
-import ru.cft.team2.chat.model.ChatView;
-import ru.cft.team2.chat.model.User;
 import org.springframework.stereotype.Service;
+import ru.cft.team2.chat.model.User;
 import ru.cft.team2.chat.model.UserView;
 import ru.cft.team2.chat.repository.UserRepository;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class UserService {
