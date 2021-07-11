@@ -4,6 +4,11 @@ public class ChatMember {
     Integer userId;
     Integer chatId;
 
+    public ChatMember(Integer userId, Integer chatId) {
+        this.userId = userId;
+        this.chatId = chatId;
+    }
+
     public Integer getUserId() {
         return userId;
     }

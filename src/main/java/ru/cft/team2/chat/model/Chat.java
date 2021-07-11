@@ -2,6 +2,7 @@ package ru.cft.team2.chat.model;
 
 import javax.persistence.*;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity(name = "chats")
@@ -15,6 +16,13 @@ public class Chat {
 
     @ManyToMany(fetch = FetchType.LAZY)
     private Set<User> chatMembers = new HashSet<>();
+
+    public Chat(Integer chatId, String name) {
+        this.chatId = chatId;
+        this.name = name;
+    }
+
+    public Chat() {}
 
     public Integer getChatId() {
         return chatId;
@@ -38,5 +46,18 @@ public class Chat {
 
     public void setChatMembers(Set<User> chatMembers) {
         this.chatMembers = chatMembers;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Chat chat = (Chat) o;
+        return Objects.equals(chatId, chat.chatId) && Objects.equals(name, chat.name) && Objects.equals(chatMembers, chat.chatMembers);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(chatId, name, chatMembers);
     }
 }

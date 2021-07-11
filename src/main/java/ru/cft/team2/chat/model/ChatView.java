@@ -1,5 +1,7 @@
 package ru.cft.team2.chat.model;
 
+import java.util.Objects;
+
 public class ChatView {
     private Integer chatId;
     private String name;
@@ -7,6 +9,11 @@ public class ChatView {
     public ChatView(Chat chat) {
         this.setChatId(chat.getChatId());
         this.setName(chat.getName());
+    }
+
+    public ChatView(Integer chatId, String name) {
+        this.chatId = chatId;
+        this.name = name;
     }
 
     public Integer getChatId() {
@@ -23,5 +30,18 @@ public class ChatView {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ChatView chatView = (ChatView) o;
+        return Objects.equals(chatId, chatView.chatId) && Objects.equals(name, chatView.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(chatId, name);
     }
 }

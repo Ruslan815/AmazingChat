@@ -29,6 +29,8 @@ public class Message {
         this.time = time;
     }
 
+    public Message() {}
+
     public Integer getMessageId() {
         return messageId;
     }
