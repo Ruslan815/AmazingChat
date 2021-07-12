@@ -22,10 +22,21 @@ public class MessageService {
     }
 
     public List<MessageView> getAllByChatId(Integer chatId) {
-        List<Message> tempList = messageRepository.findAllByChatId(chatId, Sort.by(Sort.Direction.DESC, "time"));
+        List<Message> tempList = messageRepository.findAllByChatId(chatId, Sort.by(Sort.Direction.DESC, "sendTime"));
         List<MessageView> responseList = new ArrayList<>();
-        for (Message tempMessage: tempList) {
-            responseList.add(new MessageView(tempMessage));
+        List<Integer> deletedMessagesIdsList = new ArrayList<>();
+        long currentTimeSec = System.currentTimeMillis() / 1000;
+        for (Message tempMessage : tempList) {
+            long currentMessageLifeTime = currentTimeSec - tempMessage.getSendTimeSec(); // sendTimeSec is always not null
+            Long messageLifeTimeSec = tempMessage.getLifetimeSec();
+            if (messageLifeTimeSec == null || currentMessageLifeTime < messageLifeTimeSec) { // If lifeTimeSec not specified
+                responseList.add(new MessageView(tempMessage));
+            } else {
+                deletedMessagesIdsList.add(tempMessage.getMessageId());
+            }
+        }
+        if (!deletedMessagesIdsList.isEmpty()) {
+            messageRepository.deleteAllById(deletedMessagesIdsList);
         }
         return responseList;
     }

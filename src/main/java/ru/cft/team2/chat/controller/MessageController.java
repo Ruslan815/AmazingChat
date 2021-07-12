@@ -13,7 +13,6 @@ import ru.cft.team2.chat.service.MessageService;
 import ru.cft.team2.chat.service.UserService;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
 
 @Api(tags = "Сообщения")
 @RestController
@@ -31,11 +30,12 @@ public class MessageController {
     @PostMapping("/message")
     @ApiOperation(
             value = "Отправить сообщение",
-            notes = "Создать сообщение и отправить его в указанный чат"
+            notes = "Создать сообщение с указанным временем жизни (бесконечность, если не указано) и отправить его в указанный чат"
     )
     public ResponseEntity<?> create(
             @ApiParam(value = "Сообщение, которое содержит: идентификатор пользователя, " +
-                    "идентификатор чата (если не указано - общий чат) и текст сообщения",
+                    "идентификатор чата (общий чат, если не указано), текст сообщения и " +
+                    "время жизни сообщения (бесконечность, если не указано)",
                     required = true)
             @RequestBody Message someMessage
     ) {
@@ -54,8 +54,10 @@ public class MessageController {
             return ResponseEntity.internalServerError().body(returnedRequestStatus);
         }
 
+        long currentTimeInMillis = System.currentTimeMillis();
+        someMessage.setSendTimeSec(currentTimeInMillis / 1000);
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        someMessage.setSendTime(formatter.format(new Date()));
+        someMessage.setSendTime(formatter.format(currentTimeInMillis));
         return ResponseEntity.ok(messageService.create(someMessage));
     }
 

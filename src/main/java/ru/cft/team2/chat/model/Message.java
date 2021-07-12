@@ -49,6 +49,20 @@ public class Message {
     )
     private String sendTime;
 
+    @Column(nullable = false)
+    @ApiModelProperty(
+            value = "Время отправки сообщения в секундах",
+            required = true,
+            example = "15"
+    )
+    private Long sendTimeSec;
+
+    @ApiModelProperty(
+            value = "Время жизни сообщения в секундах",
+            example = "10"
+    )
+    private Long lifetimeSec;
+
     public Message(Integer messageId, Integer userId, Integer chatId, String text, String sendTime) {
         this.messageId = messageId;
         this.userId = userId;
@@ -99,6 +113,22 @@ public class Message {
         this.sendTime = sendTime;
     }
 
+    public Long getSendTimeSec() {
+        return sendTimeSec;
+    }
+
+    public void setSendTimeSec(Long sendTimeSec) {
+        this.sendTimeSec = sendTimeSec;
+    }
+
+    public Long getLifetimeSec() {
+        return lifetimeSec;
+    }
+
+    public void setLifetimeSec(Long lifetimeSec) {
+        this.lifetimeSec = lifetimeSec;
+    }
+
     @Override
     public String toString() {
         return "Message{" +
@@ -106,7 +136,8 @@ public class Message {
                 ", userId=" + userId +
                 ", chatId=" + chatId +
                 ", text='" + text + '\'' +
-                ", time='" + sendTime + '\'' +
+                ", sendTime='" + sendTime + '\'' +
+                ", sendTimeInMillis=" + sendTimeSec +
                 '}';
     }
 
@@ -115,11 +146,11 @@ public class Message {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Message message = (Message) o;
-        return Objects.equals(messageId, message.messageId) && Objects.equals(userId, message.userId) && Objects.equals(chatId, message.chatId) && Objects.equals(text, message.text) && Objects.equals(sendTime, message.sendTime);
+        return Objects.equals(messageId, message.messageId) && Objects.equals(userId, message.userId) && Objects.equals(chatId, message.chatId) && Objects.equals(text, message.text) && Objects.equals(sendTime, message.sendTime) && Objects.equals(sendTimeSec, message.sendTimeSec);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(messageId, userId, chatId, text, sendTime);
+        return Objects.hash(messageId, userId, chatId, text, sendTime, sendTimeSec);
     }
 }
