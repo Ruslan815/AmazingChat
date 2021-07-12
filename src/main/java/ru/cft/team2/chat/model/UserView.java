@@ -1,12 +1,31 @@
 package ru.cft.team2.chat.model;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 import java.util.Objects;
 
+@ApiModel(description = "Отображение пользователей")
 public class UserView {
+    @ApiModelProperty(
+            value = "Идентификатор пользователя",
+            required = true,
+            example = "1"
+    )
     private Integer id;
 
+    @ApiModelProperty(
+            value = "Имя пользователя",
+            required = true,
+            example = "someFirstName"
+    )
     private String firstName;
 
+    @ApiModelProperty(
+            value = "Фамилия пользователя",
+            required = true,
+            example = "someLastName"
+    )
     private String lastName;
 
     public UserView(User user) {
