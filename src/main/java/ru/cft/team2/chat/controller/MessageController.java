@@ -55,7 +55,7 @@ public class MessageController {
         }
 
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        someMessage.setTime(formatter.format(new Date()));
+        someMessage.setSendTime(formatter.format(new Date()));
         return ResponseEntity.ok(messageService.create(someMessage));
     }
 

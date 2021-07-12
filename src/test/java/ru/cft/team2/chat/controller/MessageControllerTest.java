@@ -52,7 +52,7 @@ class MessageControllerTest {
         MessageView expectedMessage = new MessageView(userId, messageText, messageTime);
         ResponseEntity expectedResponse = ResponseEntity.ok(expectedMessage);
         Mockito.when(userService.isUserExist(userId)).thenReturn(true);
-        passedMessage.setTime(messageTime);
+        passedMessage.setSendTime(messageTime);
         Mockito.when(messageService.create(passedMessage)).thenReturn(expectedMessage);
 
         ResponseEntity actualResponse = messageController.create(passedMessage);
@@ -70,7 +70,7 @@ class MessageControllerTest {
         Mockito.when(userService.isUserExist(userId)).thenReturn(true);
         Mockito.when(chatService.isPrivateChatExist(chatId)).thenReturn(true);
         Mockito.when(chatService.isUserInPrivateChat(Mockito.any(), eq(chatId))).thenReturn(true);
-        passedMessage.setTime(messageTime);
+        passedMessage.setSendTime(messageTime);
         Mockito.when(messageService.create(passedMessage)).thenReturn(expectedMessage);
 
         ResponseEntity actualResponse = messageController.create(passedMessage);

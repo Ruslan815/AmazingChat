@@ -47,14 +47,14 @@ public class Message {
             required = true,
             example = "2021-07-12 17:46:00"
     )
-    private String time;
+    private String sendTime;
 
-    public Message(Integer messageId, Integer userId, Integer chatId, String text, String time) {
+    public Message(Integer messageId, Integer userId, Integer chatId, String text, String sendTime) {
         this.messageId = messageId;
         this.userId = userId;
         this.chatId = chatId;
         this.text = text;
-        this.time = time;
+        this.sendTime = sendTime;
     }
 
     public Message() {}
@@ -91,12 +91,12 @@ public class Message {
         this.text = text;
     }
 
-    public String getTime() {
-        return time;
+    public String getSendTime() {
+        return sendTime;
     }
 
-    public void setTime(String time) {
-        this.time = time;
+    public void setSendTime(String sendTime) {
+        this.sendTime = sendTime;
     }
 
     @Override
@@ -106,7 +106,7 @@ public class Message {
                 ", userId=" + userId +
                 ", chatId=" + chatId +
                 ", text='" + text + '\'' +
-                ", time='" + time + '\'' +
+                ", time='" + sendTime + '\'' +
                 '}';
     }
 
@@ -115,11 +115,11 @@ public class Message {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Message message = (Message) o;
-        return Objects.equals(messageId, message.messageId) && Objects.equals(userId, message.userId) && Objects.equals(chatId, message.chatId) && Objects.equals(text, message.text) && Objects.equals(time, message.time);
+        return Objects.equals(messageId, message.messageId) && Objects.equals(userId, message.userId) && Objects.equals(chatId, message.chatId) && Objects.equals(text, message.text) && Objects.equals(sendTime, message.sendTime);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(messageId, userId, chatId, text, time);
+        return Objects.hash(messageId, userId, chatId, text, sendTime);
     }
 }
