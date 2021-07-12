@@ -1,10 +1,32 @@
 package ru.cft.team2.chat.model;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 import java.util.Objects;
 
+@ApiModel(description = "Отображение сообщения")
 public class MessageView {
+
+    @ApiModelProperty(
+            value = "Идентификатор автора сообщения",
+            required = true,
+            example = "1"
+    )
     private Integer userId;
+
+    @ApiModelProperty(
+            value = "Текст сообщения",
+            required = true,
+            example = "Gravity falls"
+    )
     private String text;
+
+    @ApiModelProperty(
+            value = "Время отправки сообщения",
+            required = true,
+            example = "2021-07-12 17:50:00"
+    )
     private String time;
 
     public MessageView(Message message) {
