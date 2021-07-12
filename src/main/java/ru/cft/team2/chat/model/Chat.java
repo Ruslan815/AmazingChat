@@ -1,20 +1,37 @@
 package ru.cft.team2.chat.model;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
+@ApiModel(description = "Чаты")
 @Entity(name = "chats")
 public class Chat {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @ApiModelProperty(
+            value = "Идентификатор чата",
+            required = true,
+            example = "1"
+    )
     private Integer chatId;
 
     @Column
+    @ApiModelProperty(
+            value = "Имя чата",
+            required = true,
+            example = "someName"
+    )
     private String name;
 
     @ManyToMany(fetch = FetchType.LAZY)
+    @ApiModelProperty(
+            value = "Список участников чата"
+    )
     private Set<User> chatMembers = new HashSet<>();
 
     public Chat(Integer chatId, String name) {
@@ -22,7 +39,8 @@ public class Chat {
         this.name = name;
     }
 
-    public Chat() {}
+    public Chat() {
+    }
 
     public Integer getChatId() {
         return chatId;

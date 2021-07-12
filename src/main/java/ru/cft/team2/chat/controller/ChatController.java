@@ -3,6 +3,9 @@ package ru.cft.team2.chat.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.cft.team2.chat.error.ValidationResult;
@@ -14,6 +17,7 @@ import ru.cft.team2.chat.service.UserService;
 
 import java.util.List;
 
+@Api(tags = "Чаты")
 @RestController
 public class ChatController {
     private final ChatService chatService;
@@ -25,7 +29,14 @@ public class ChatController {
     }
 
     @PostMapping("/chat")
-    public ResponseEntity<?> create(@RequestBody Chat someChat) {
+    @ApiOperation(
+            value = "Создать чат",
+            notes = "Создается чат с указанным названием"
+    )
+    public ResponseEntity<?> create(
+            @ApiParam(value = "Название чата", required = true)
+            @RequestBody Chat someChat
+    ) {
         ChatView response;
         try {
             response = chatService.create(someChat);
@@ -36,12 +47,25 @@ public class ChatController {
     }
 
     @GetMapping("/chats")
+    @ApiOperation(
+            value = "Получить все чаты",
+            notes = "Получает список всех чатов и возвращает их"
+    )
     public List<ChatView> get() {
         return chatService.getAll();
     }
 
+
     @PostMapping("/chat/enter")
-    public ResponseEntity<?> enterChat(@RequestBody ChatMember chatMember) {
+    @ApiOperation(
+            value = "Войти в чат",
+            notes = "Регистрирует нового пользователя в чате"
+    )
+    public ResponseEntity<?> enterChat(
+            @ApiParam(value = "Идентификатор пользователя и идентификатор чата, в который хочет присоединиться пользователь",
+                    required = true)
+            @RequestBody ChatMember chatMember
+    ) {
         ResponseEntity response;
         Integer userId = chatMember.getUserId();
         Integer chatId = chatMember.getChatId();
@@ -67,7 +91,15 @@ public class ChatController {
     }
 
     @PostMapping("/chat/leave")
-    public ResponseEntity<?> leaveChat(@RequestBody ChatMember chatMember) {
+    @ApiOperation(
+            value = "Выйти из чата",
+            notes = "Удаляет пользователя из чата"
+    )
+    public ResponseEntity<?> leaveChat(
+            @ApiParam(value = "Идентификатор пользователя и идентификатор чата, из которого нужно удалить пользователя",
+                    required = true)
+            @RequestBody ChatMember chatMember
+    ) {
         ResponseEntity response;
         Integer userId = chatMember.getUserId();
         Integer chatId = chatMember.getChatId();
