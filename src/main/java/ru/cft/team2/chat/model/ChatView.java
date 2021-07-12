@@ -1,9 +1,24 @@
 package ru.cft.team2.chat.model;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 import java.util.Objects;
 
+@ApiModel(description = "Отображение чата")
 public class ChatView {
+    @ApiModelProperty(
+            value = "Идентификатор чата",
+            required = true,
+            example = "1"
+    )
     private Integer chatId;
+
+    @ApiModelProperty(
+            value = "Название чата",
+            required = true,
+            name = "someName"
+    )
     private String name;
 
     public ChatView(Chat chat) {

@@ -1,5 +1,8 @@
 package ru.cft.team2.chat.controller;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.cft.team2.chat.error.ErrorHandler;
@@ -12,6 +15,7 @@ import ru.cft.team2.chat.service.UserService;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+@Api(tags = "Сообщения")
 @RestController
 public class MessageController {
     private final MessageService messageService;
@@ -25,7 +29,16 @@ public class MessageController {
     }
 
     @PostMapping("/message")
-    public ResponseEntity<?> create(@RequestBody Message someMessage) {
+    @ApiOperation(
+            value = "Отправить сообщение",
+            notes = "Создать сообщение и отправить его в указанный чат"
+    )
+    public ResponseEntity<?> create(
+            @ApiParam(value = "Сообщение, которое содержит: идентификатор пользователя, " +
+                    "идентификатор чата (если не указано - общий чат) и текст сообщения",
+                    required = true)
+            @RequestBody Message someMessage
+    ) {
         Integer userId = someMessage.getUserId();
         Integer chatId = someMessage.getChatId();
         boolean isUserExist = userService.isUserExist(userId);
@@ -47,7 +60,14 @@ public class MessageController {
     }
 
     @GetMapping("/messages")
-    public ResponseEntity<?> read(@RequestParam(required = false) Integer chatId) {
+    @ApiOperation(
+            value = "Получить все сообщения",
+            notes = "Возвращает список всех сообщений из указанного чата"
+    )
+    public ResponseEntity<?> read(
+            @ApiParam(value = "Идентификатор чата (для общего чата не указывается)", required = false)
+            @RequestParam(required = false) Integer chatId
+    ) {
         if (chatId == null || chatService.isPrivateChatExist(chatId)) {
             return ResponseEntity.ok(messageService.getAllByChatId(chatId));
         }

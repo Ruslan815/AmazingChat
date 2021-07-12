@@ -1,24 +1,52 @@
 package ru.cft.team2.chat.model;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 import javax.persistence.*;
 import java.util.Objects;
 
 @Entity(name = "messages")
+@ApiModel(description = "Сообщение")
 public class Message {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @ApiModelProperty(
+            value = "Идентификатор сообщения",
+            required = true,
+            example = "1"
+    )
     private Integer messageId;
 
     @Column(nullable = false)
+    @ApiModelProperty(
+            value = "Идентификатор автора сообщения",
+            required = true,
+            example = "1"
+    )
     private Integer userId;
 
+    @ApiModelProperty(
+            value = "Идентификатор чата",
+            example = "1"
+    )
     private Integer chatId;
 
     @Column(nullable = false)
+    @ApiModelProperty(
+            value = "Текст сообщения",
+            required = true,
+            example = "Adventure time"
+    )
     private String text;
 
     @Column(nullable = false)
+    @ApiModelProperty(
+            value = "Время отправки сообщения",
+            required = true,
+            example = "2021-07-12 17:46:00"
+    )
     private String time;
 
     public Message(Integer messageId, Integer userId, Integer chatId, String text, String time) {

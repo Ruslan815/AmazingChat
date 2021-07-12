@@ -1,23 +1,44 @@
 package ru.cft.team2.chat.model;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
+@ApiModel(description = "Пользователь")
 @Entity(name = "users")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @ApiModelProperty(
+            value = "Идентификатор пользователя",
+            example = "1"
+    )
     private Integer id;
 
     @Column(nullable = false)
+    @ApiModelProperty(
+            value = "Имя пользователя",
+            required = true,
+            example = "someFirstName"
+    )
     private String firstName;
 
     @Column(nullable = false)
+    @ApiModelProperty(
+            value = "Фамилия пользователя",
+            required = true,
+            example = "someLastName"
+    )
     private String lastName;
 
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "chatMembers")
+    @ApiModelProperty(
+            value = "Список доступных чатов для пользователя"
+    )
     private Set<Chat> availableChats = new HashSet<>();
 
     public User() {}
