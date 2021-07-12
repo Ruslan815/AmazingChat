@@ -8,7 +8,7 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
-@ApiModel(description = "Пользователи")
+@ApiModel(description = "Пользователь")
 @Entity(name = "users")
 public class User {
     @Id

@@ -5,7 +5,7 @@ import io.swagger.annotations.ApiModelProperty;
 
 import java.util.Objects;
 
-@ApiModel(description = "Отображение пользователей")
+@ApiModel(description = "Отображение пользователя")
 public class UserView {
     @ApiModelProperty(
             value = "Идентификатор пользователя",
