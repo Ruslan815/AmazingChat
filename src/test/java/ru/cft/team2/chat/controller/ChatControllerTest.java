@@ -16,11 +16,14 @@ import ru.cft.team2.chat.model.ChatView;
 import ru.cft.team2.chat.service.ChatService;
 import ru.cft.team2.chat.service.UserService;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.eq;
 
 @SpringBootTest
-public class ChatControllerTest {
+class ChatControllerTest {
 
     @Autowired
     private ChatController chatController;
@@ -68,6 +71,28 @@ public class ChatControllerTest {
     }
 
     @Test
+    void getSuccessful() {
+        List<ChatView> expectedList = new ArrayList<>();
+        expectedList.add(new ChatView(chatId, name));
+        expectedList.add(new ChatView(chatId + 1, name));
+        Mockito.when(chatService.getAll()).thenReturn(expectedList);
+
+        List<ChatView> actualList = chatController.get();
+
+        assertEquals(expectedList, actualList);
+    }
+
+    @Test
+    void getSuccessfulEmptyList() {
+        List<ChatView> expectedList = new ArrayList<>();
+        Mockito.when(chatService.getAll()).thenReturn(expectedList);
+
+        List<ChatView> actualList = chatController.get();
+
+        assertEquals(expectedList, actualList);
+    }
+
+    @Test
     void enterChatSuccessful() {
         ChatMember chatMember = new ChatMember(userId, chatId);
         ResponseEntity expectedResponse = null;
@@ -103,7 +128,6 @@ public class ChatControllerTest {
         ResponseEntity expectedResponse = ResponseEntity.internalServerError().body(ValidationResult.CHAT_NOT_FOUND);
         Mockito.when(userService.isUserExist(userId)).thenReturn(true);
         Mockito.when(chatService.isPrivateChatExist(chatId)).thenReturn(false);
-
 
         ResponseEntity actualResponse = chatController.enterChat(chatMember);
 
@@ -159,7 +183,6 @@ public class ChatControllerTest {
         ResponseEntity expectedResponse = ResponseEntity.internalServerError().body(ValidationResult.CHAT_NOT_FOUND);
         Mockito.when(userService.isUserExist(userId)).thenReturn(true);
         Mockito.when(chatService.isPrivateChatExist(chatId)).thenReturn(false);
-
 
         ResponseEntity actualResponse = chatController.leaveChat(chatMember);
 
