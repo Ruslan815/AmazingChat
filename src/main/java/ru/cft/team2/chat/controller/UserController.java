@@ -1,11 +1,10 @@
 package ru.cft.team2.chat.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.cft.team2.chat.error.ValidationResult;
 import ru.cft.team2.chat.model.User;
+import ru.cft.team2.chat.model.UserView;
 import ru.cft.team2.chat.service.UserService;
 import ru.cft.team2.chat.error.ErrorHandler;
 
@@ -15,7 +14,6 @@ import java.util.List;
 public class UserController {
     private final UserService userService;
 
-    @Autowired
     public UserController(UserService userService) {
         this.userService = userService;
     }
@@ -24,34 +22,42 @@ public class UserController {
     public ResponseEntity<?> create(@RequestBody User user) {
         ValidationResult returnedRequestStatus = ErrorHandler.validateUser(user);
         if (returnedRequestStatus != ValidationResult.NO_ERROR) {
-            return new ResponseEntity<>(returnedRequestStatus, HttpStatus.INTERNAL_SERVER_ERROR);
+            return ResponseEntity.internalServerError().body(returnedRequestStatus);
         }
-        return new ResponseEntity<>(userService.create(user), HttpStatus.OK);
+        return ResponseEntity.ok(userService.create(user));
     }
 
     @GetMapping("/users")
-    public List<User> read() {
-        return userService.getAll();
+    public List<UserView> read() {
+        return userService.getAllUserViews();
     }
 
     @GetMapping("/user/{userId}")
     public ResponseEntity<?> get(@PathVariable(name = "userId") int userId) {
-        User returnedUser = userService.get(userId);
-        return returnedUser == null
-                ? new ResponseEntity<>(ValidationResult.USER_NOT_FOUND, HttpStatus.INTERNAL_SERVER_ERROR)
-                : new ResponseEntity<>(returnedUser, HttpStatus.OK);
+        UserView returnedUser;
+        try {
+            returnedUser = userService.getUserView(userId);
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body(ValidationResult.USER_NOT_FOUND);
+        }
+        return ResponseEntity.ok(returnedUser);
     }
 
     @PutMapping("/user/{userId}")
     public ResponseEntity<?> update(@PathVariable(name = "userId") int userId, @RequestBody User user) {
+        ResponseEntity<?> response;
         ValidationResult returnedRequestStatus = ErrorHandler.validateUser(user);
-        if (returnedRequestStatus != ValidationResult.NO_ERROR) {
-            return new ResponseEntity<>(returnedRequestStatus, HttpStatus.INTERNAL_SERVER_ERROR);
+        if (returnedRequestStatus == ValidationResult.NO_ERROR) {
+            UserView returnedUser;
+            try {
+                returnedUser = userService.update(user, userId);
+                response = ResponseEntity.ok(returnedUser);
+            } catch (Exception e) {
+                response = ResponseEntity.internalServerError().body(ValidationResult.USER_NOT_FOUND);
+            }
+        } else {
+            response = ResponseEntity.internalServerError().body(returnedRequestStatus);
         }
-        User returnedUser = userService.update(user, userId);
-        if (returnedUser == null) {
-            return new ResponseEntity<>(ValidationResult.USER_NOT_FOUND, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-        return new ResponseEntity<>(returnedUser, HttpStatus.OK);
+        return response;
     }
 }

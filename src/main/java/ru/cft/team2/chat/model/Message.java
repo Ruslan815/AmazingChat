@@ -12,6 +12,8 @@ public class Message {
     @Column(nullable = false)
     private Integer userId;
 
+    private Integer chatId;
+
     @Column(nullable = false)
     private String text;
 
@@ -32,6 +34,14 @@ public class Message {
 
     public void setUserId(Integer userId) {
         this.userId = userId;
+    }
+
+    public Integer getChatId() {
+        return chatId;
+    }
+
+    public void setChatId(Integer chatId) {
+        this.chatId = chatId;
     }
 
     public String getText() {
