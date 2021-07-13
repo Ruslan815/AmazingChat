@@ -9,15 +9,12 @@ import ru.cft.team2.chat.error.ErrorHandler;
 import ru.cft.team2.chat.error.ValidationResult;
 import ru.cft.team2.chat.model.Chat;
 import ru.cft.team2.chat.model.Message;
-import ru.cft.team2.chat.model.User;
 import ru.cft.team2.chat.service.ChatService;
 import ru.cft.team2.chat.service.MessageService;
 import ru.cft.team2.chat.service.UserService;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
 
 @Api(tags = "Сообщения")
 @RestController
@@ -53,7 +50,7 @@ public class MessageController {
         boolean isUserInChat = true;
         if (chatId != null) {
             isChatExist = chatService.isPrivateChatExist(chatId);
-            isUserInChat = chatService.isUserInPrivateChat(userService.getUser(userId), chatId);
+            isUserInChat = isUserExist && chatService.isUserInPrivateChat(userService.getUser(userId), chatId); // Чтобы не словить NPE
         }
 
         ValidationResult returnedRequestStatus = ErrorHandler.validateMessage(someMessage, isUserExist, isChatExist, isUserInChat);
@@ -70,8 +67,9 @@ public class MessageController {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         someMessage.setSendTime(formatter.format(currentTimeInMillis + delaySec * 1000));
 
-        if(chatId == null) {
-            someMessage.setUsersWhoDidNotRead(userService.getAllUsers()); //TODO: Добавится ли пользоваетелям сообщение?
+        // Set new message in unread state for all chat users
+        if (chatId == null) {
+            someMessage.setUsersWhoDidNotRead(userService.getAllUsers()); //TODO: Добавится ли пользоваетелям непрочитанное сообщение? Да!!!
         } else {
             Chat chat = chatService.getByChatId(chatId);
             someMessage.setUsersWhoDidNotRead(new ArrayList<>(chat.getChatMembers()));
@@ -91,10 +89,22 @@ public class MessageController {
             @ApiParam(value = "Идентификатор чата (для общего чата не указывается)")
             @RequestParam(required = false) Integer chatId
     ) {
-        if (chatId == null || chatService.isPrivateChatExist(chatId)) {
-            return ResponseEntity.ok(messageService.getAllByChatId(chatId));
+        boolean isUserExist = userService.isUserExist(userId);
+        boolean isChatExist = chatId == null || chatService.isPrivateChatExist(chatId);
+        boolean isUserInChat = chatId == null || (isUserExist && chatService.isUserInPrivateChat(userService.getUser(userId), chatId));
+        ResponseEntity responseEntity;
+        if (isUserExist && isChatExist && isUserInChat) {
+            messageService.readMessages(userService.getUser(userId), chatId); // Marks unread messages in this chat for this user as read
+            responseEntity = ResponseEntity.ok(messageService.getAllByChatId(chatId));
+        } else if (!isUserExist) {
+            responseEntity = ResponseEntity.internalServerError().body(ValidationResult.USER_NOT_FOUND);
+        } else if (!isChatExist) {
+            responseEntity = ResponseEntity.internalServerError().body(ValidationResult.CHAT_NOT_FOUND);
+        } else {
+            responseEntity = ResponseEntity.internalServerError().body(ValidationResult.USER_NOT_IN_CHAT);
         }
-        return ResponseEntity.internalServerError().body(ValidationResult.CHAT_NOT_FOUND);
+
+        return responseEntity;
     }
 
     @GetMapping("/messages/unread")
@@ -108,21 +118,20 @@ public class MessageController {
             @ApiParam(value = "Идентификатор чата (для общего чата не указывается)")
             @RequestParam(required = false) Integer chatId
     ) {
-        List<Message> responseList = new ArrayList<>();
-        User user = userService.getUser(userId);
-        Set<Message> unreadMessages = user.getUnreadMessages();
-        for(Message message : unreadMessages) {
-            if(message.getChatId() == chatId) {
-                responseList.add(message);
-                unreadMessages.remove(message);
-            }
-        }
-        try {
-            userService.update(user, userId);
-        } catch (Exception e) {
-            e.printStackTrace();
+        boolean isUserExist = userService.isUserExist(userId);
+        boolean isChatExist = chatId == null || chatService.isPrivateChatExist(chatId);
+        boolean isUserInChat = chatId == null || (isUserExist && chatService.isUserInPrivateChat(userService.getUser(userId), chatId));
+        ResponseEntity responseEntity;
+        if (isUserExist && isChatExist && isUserInChat) {
+            responseEntity = ResponseEntity.ok(messageService.readMessages(userService.getUser(userId), chatId));
+        } else if (!isUserExist) {
+            responseEntity = ResponseEntity.internalServerError().body(ValidationResult.USER_NOT_FOUND);
+        } else if (!isChatExist) {
+            responseEntity = ResponseEntity.internalServerError().body(ValidationResult.CHAT_NOT_FOUND);
+        } else {
+            responseEntity = ResponseEntity.internalServerError().body(ValidationResult.USER_NOT_IN_CHAT);
         }
 
-        return ResponseEntity.ok(responseList);
+        return responseEntity;
     }
 }

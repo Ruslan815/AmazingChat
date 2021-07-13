@@ -4,6 +4,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ru.cft.team2.chat.model.Message;
 import ru.cft.team2.chat.model.MessageView;
+import ru.cft.team2.chat.model.User;
 import ru.cft.team2.chat.repository.MessageRepository;
 
 import java.util.ArrayList;
@@ -48,5 +49,18 @@ public class MessageService {
         if (!deletedMessagesIdsList.isEmpty()) {
             messageRepository.deleteAllById(deletedMessagesIdsList);
         }
+    }
+
+    public List<MessageView> readMessages(User someUser, Integer chatId) {
+        List<Message> chatMessagesList = messageRepository.findAllByChatId(chatId, Sort.by(Sort.Direction.DESC, "sendTime"));
+        List<MessageView> responseList = new ArrayList<>();
+        for (Message someMessage : chatMessagesList) {
+            if (someMessage.getUsersWhoDidNotRead().remove(someUser)) { //TODO: Удалится ли пользоваетель из списка не прочитавших сообщение? Да!!!
+                responseList.add(new MessageView(someMessage));
+            }
+        }
+        messageRepository.saveAll(chatMessagesList);
+
+        return responseList;
     }
 }

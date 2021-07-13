@@ -33,14 +33,14 @@ public class User {
     )
     private String lastName;
 
-    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "chatMembers")
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "chatMembers") // Все изменения надо делать в Chat, тогда всё работает
     @ApiModelProperty(
             value = "Список доступных чатов для пользователя"
     )
     private Set<Chat> availableChats = new HashSet<>();
 
-    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "usersWhoDidNotRead")
-    private Set<Message> unreadMessages = new HashSet<>();
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "usersWhoDidNotRead") // Все изменения надо делать в Message, тогда всё работает
+    private List<Message> unreadMessages = new ArrayList<>();
 
     public User() {}
 
@@ -82,11 +82,11 @@ public class User {
         this.availableChats = availableChats;
     }
 
-    public Set<Message> getUnreadMessages() {
+    public List<Message> getUnreadMessages() {
         return unreadMessages;
     }
 
-    public void setUnreadMessages(Set<Message> unreadMessages) {
+    public void setUnreadMessages(List<Message> unreadMessages) {
         this.unreadMessages = unreadMessages;
     }
 
