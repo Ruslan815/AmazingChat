@@ -48,6 +48,14 @@ public class ChatView {
     }
 
     @Override
+    public String toString() {
+        return "ChatView{" +
+                "chatId=" + chatId +
+                ", name='" + name + '\'' +
+                '}';
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;

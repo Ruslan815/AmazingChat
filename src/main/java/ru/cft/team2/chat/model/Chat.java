@@ -67,6 +67,15 @@ public class Chat {
     }
 
     @Override
+    public String toString() {
+        return "Chat{" +
+                "chatId=" + chatId +
+                ", name='" + name + '\'' +
+                ", chatMembers=" + chatMembers +
+                '}';
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;

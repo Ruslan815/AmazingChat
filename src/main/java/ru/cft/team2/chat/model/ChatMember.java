@@ -39,4 +39,12 @@ public class ChatMember {
     public void setChatId(Integer chatId) {
         this.chatId = chatId;
     }
+
+    @Override
+    public String toString() {
+        return "ChatMember{" +
+                "userId=" + userId +
+                ", chatId=" + chatId +
+                '}';
+    }
 }
