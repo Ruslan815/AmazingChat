@@ -1,5 +1,8 @@
 package ru.cft.team2.chat.controller;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.cft.team2.chat.error.ValidationResult;
@@ -10,6 +13,7 @@ import ru.cft.team2.chat.error.ErrorHandler;
 
 import java.util.List;
 
+@Api(tags = "Пользователи")
 @RestController
 public class UserController {
     private final UserService userService;
@@ -19,7 +23,14 @@ public class UserController {
     }
 
     @PostMapping("/user")
-    public ResponseEntity<?> create(@RequestBody User user) {
+    @ApiOperation(
+            value = "Создать пользователя",
+            notes = "Создается пользователь с указанными именем и фамилией"
+    )
+    public ResponseEntity<?> create(
+            @ApiParam(value = "Пользователь", required = true)
+            @RequestBody User user
+    ) {
         ValidationResult returnedRequestStatus = ErrorHandler.validateUser(user);
         if (returnedRequestStatus != ValidationResult.NO_ERROR) {
             return ResponseEntity.internalServerError().body(returnedRequestStatus);
@@ -27,13 +38,24 @@ public class UserController {
         return ResponseEntity.ok(userService.create(user));
     }
 
+    @ApiOperation(
+            value = "Получить всех пользователей",
+            notes = "Получает список всех пользователей и возвращает их"
+    )
     @GetMapping("/users")
     public List<UserView> read() {
         return userService.getAllUserViews();
     }
 
+    @ApiOperation(
+            value = "Получить пользователя по идентификатору",
+            notes = "Получает на вход идентификатор пользователя и возвращает пользователя с этим идентификатором или возвращает ошибку, если пользователь не найден"
+    )
     @GetMapping("/user/{userId}")
-    public ResponseEntity<?> get(@PathVariable(name = "userId") int userId) {
+    public ResponseEntity<?> get(
+            @ApiParam(value = "Идентификатор пользователя", required = true, example = "1")
+            @PathVariable(name = "userId") int userId
+    ) {
         UserView returnedUser;
         try {
             returnedUser = userService.getUserView(userId);
@@ -43,8 +65,18 @@ public class UserController {
         return ResponseEntity.ok(returnedUser);
     }
 
+    @ApiOperation(
+            value = "Обновить пользователя",
+            notes = "Получает на вход пользователя и его идентификатор, после чего обновляем данные пользователя"
+    )
     @PutMapping("/user/{userId}")
-    public ResponseEntity<?> update(@PathVariable(name = "userId") int userId, @RequestBody User user) {
+    public ResponseEntity<?> update(
+            @ApiParam(value = "Идентификатор пользователя", required = true, example = "1")
+            @PathVariable(name = "userId") int userId,
+
+            @ApiParam(value = "Пользователь", required = true)
+            @RequestBody User user
+    ) {
         ResponseEntity<?> response;
         ValidationResult returnedRequestStatus = ErrorHandler.validateUser(user);
         if (returnedRequestStatus == ValidationResult.NO_ERROR) {
