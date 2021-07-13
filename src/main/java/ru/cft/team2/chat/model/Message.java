@@ -4,7 +4,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 import javax.persistence.*;
-import java.util.Objects;
+import java.util.*;
 
 @Entity(name = "messages")
 @ApiModel(description = "Сообщение")
@@ -68,6 +68,9 @@ public class Message {
             example = "10"
     )
     private Long delaySec;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    private List<User> usersWhoDidNotRead = new ArrayList<>();
 
     public Message(Integer messageId, Integer userId, Integer chatId, String text, String sendTime) {
         this.messageId = messageId;
@@ -141,6 +144,14 @@ public class Message {
 
     public void setDelaySec(Long delaySec) {
         this.delaySec = delaySec;
+    }
+
+    public List<User> getUsersWhoDidNotRead() {
+        return usersWhoDidNotRead;
+    }
+
+    public void setUsersWhoDidNotRead(List<User> usersWhoDidNotRead) {
+        this.usersWhoDidNotRead = usersWhoDidNotRead;
     }
 
     @Override

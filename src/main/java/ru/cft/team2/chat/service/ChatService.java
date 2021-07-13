@@ -34,6 +34,10 @@ public class ChatService {
         return responseList;
     }
 
+    public Chat getByChatId(Integer chatId) {
+        return chatRepository.findById(chatId).orElseThrow();
+    }
+
     @Transactional
     public boolean enterChat(User user, Integer chatId) {
         Chat chat = chatRepository.getById(chatId);

@@ -7,12 +7,17 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.cft.team2.chat.error.ErrorHandler;
 import ru.cft.team2.chat.error.ValidationResult;
+import ru.cft.team2.chat.model.Chat;
 import ru.cft.team2.chat.model.Message;
+import ru.cft.team2.chat.model.User;
 import ru.cft.team2.chat.service.ChatService;
 import ru.cft.team2.chat.service.MessageService;
 import ru.cft.team2.chat.service.UserService;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 @Api(tags = "Сообщения")
 @RestController
@@ -64,6 +69,14 @@ public class MessageController {
         someMessage.setSendTimeSec(currentTimeInMillis / 1000 + delaySec);
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         someMessage.setSendTime(formatter.format(currentTimeInMillis + delaySec * 1000));
+
+        if(chatId == null) {
+            someMessage.setUsersWhoDidNotRead(userService.getAllUsers()); //TODO: Добавится ли пользоваетелям сообщение?
+        } else {
+            Chat chat = chatService.getByChatId(chatId);
+            someMessage.setUsersWhoDidNotRead(new ArrayList<>(chat.getChatMembers()));
+        }
+
         return ResponseEntity.ok(messageService.create(someMessage));
     }
 
@@ -73,6 +86,8 @@ public class MessageController {
             notes = "Возвращает список всех сообщений из указанного чата"
     )
     public ResponseEntity<?> read(
+            @ApiParam(value = "Идентификатор пользователя")
+            @RequestParam Integer userId,
             @ApiParam(value = "Идентификатор чата (для общего чата не указывается)")
             @RequestParam(required = false) Integer chatId
     ) {
@@ -80,5 +95,34 @@ public class MessageController {
             return ResponseEntity.ok(messageService.getAllByChatId(chatId));
         }
         return ResponseEntity.internalServerError().body(ValidationResult.CHAT_NOT_FOUND);
+    }
+
+    @GetMapping("/messages/unread")
+    @ApiOperation(
+            value = "Получить список непрочитанных сообщений",
+            notes = "Возвращает список всех непрочитанных сообщений пользователя из указанного чата"
+    )
+    public ResponseEntity<?> getUnreadMessages(
+            @ApiParam(value = "Идентификатор пользователя")
+            @RequestParam Integer userId,
+            @ApiParam(value = "Идентификатор чата (для общего чата не указывается)")
+            @RequestParam(required = false) Integer chatId
+    ) {
+        List<Message> responseList = new ArrayList<>();
+        User user = userService.getUser(userId);
+        Set<Message> unreadMessages = user.getUnreadMessages();
+        for(Message message : unreadMessages) {
+            if(message.getChatId() == chatId) {
+                responseList.add(message);
+                unreadMessages.remove(message);
+            }
+        }
+        try {
+            userService.update(user, userId);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return ResponseEntity.ok(responseList);
     }
 }
