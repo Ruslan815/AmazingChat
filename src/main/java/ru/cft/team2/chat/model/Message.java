@@ -63,6 +63,12 @@ public class Message {
     )
     private Long lifetimeSec;
 
+    @ApiModelProperty(
+            value = "Количество секунд задержки отправки сообщения",
+            example = "10"
+    )
+    private Long delaySec;
+
     public Message(Integer messageId, Integer userId, Integer chatId, String text, String sendTime) {
         this.messageId = messageId;
         this.userId = userId;
@@ -127,6 +133,14 @@ public class Message {
 
     public void setLifetimeSec(Long lifetimeSec) {
         this.lifetimeSec = lifetimeSec;
+    }
+
+    public Long getDelaySec() {
+        return delaySec;
+    }
+
+    public void setDelaySec(Long delaySec) {
+        this.delaySec = delaySec;
     }
 
     @Override

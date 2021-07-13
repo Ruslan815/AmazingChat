@@ -30,12 +30,14 @@ public class MessageController {
     @PostMapping("/message")
     @ApiOperation(
             value = "Отправить сообщение",
-            notes = "Создать сообщение с указанным временем жизни (бесконечность, если не указано) и отправить его в указанный чат"
+            notes = "Создать сообщение с указанным временем жизни (бесконечность, если не указано)" +
+                    " и запланированным временем отправки (текущее, если не указано), после чего отправить его в указанный чат"
     )
     public ResponseEntity<?> create(
             @ApiParam(value = "Сообщение, которое содержит: идентификатор пользователя, " +
-                    "идентификатор чата (общий чат, если не указано), текст сообщения и " +
-                    "время жизни сообщения (бесконечность, если не указано)",
+                    "идентификатор чата (общий чат, если не указано), текст сообщения, " +
+                    "время жизни сообщения (бесконечность, если не указано) и " +
+                    "запланированное время отправки (текущее, если не указано)",
                     required = true)
             @RequestBody Message someMessage
     ) {
@@ -55,9 +57,13 @@ public class MessageController {
         }
 
         long currentTimeInMillis = System.currentTimeMillis();
-        someMessage.setSendTimeSec(currentTimeInMillis / 1000);
+        long delaySec = 0;
+        if(someMessage.getDelaySec() != null) {
+            delaySec = someMessage.getDelaySec();
+        }
+        someMessage.setSendTimeSec(currentTimeInMillis / 1000 + delaySec);
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        someMessage.setSendTime(formatter.format(currentTimeInMillis));
+        someMessage.setSendTime(formatter.format(currentTimeInMillis + delaySec * 1000));
         return ResponseEntity.ok(messageService.create(someMessage));
     }
 
@@ -67,7 +73,7 @@ public class MessageController {
             notes = "Возвращает список всех сообщений из указанного чата"
     )
     public ResponseEntity<?> read(
-            @ApiParam(value = "Идентификатор чата (для общего чата не указывается)", required = false)
+            @ApiParam(value = "Идентификатор чата (для общего чата не указывается)")
             @RequestParam(required = false) Integer chatId
     ) {
         if (chatId == null || chatService.isPrivateChatExist(chatId)) {
