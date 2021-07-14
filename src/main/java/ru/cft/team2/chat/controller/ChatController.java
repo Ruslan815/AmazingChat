@@ -33,10 +33,10 @@ public class ChatController {
     @PostMapping("/chat")
     @ApiOperation(
             value = "Создать чат",
-            notes = "Создается чат с указанным названием"
+            notes = "Создается чат с указанным названием и подпиской на RSS ленту (необязательно)"
     )
     public ResponseEntity<?> create(
-            @ApiParam(value = "Название чата", required = true)
+            @ApiParam(value = "Название чата, ссылка на RSS ленту (необязательно)", required = true)
             @RequestBody Chat someChat
     ) {
         ResponseEntity responseEntity;

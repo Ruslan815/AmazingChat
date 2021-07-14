@@ -1,12 +1,31 @@
 package ru.cft.team2.chat.model;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
+@ApiModel(description = "Отображение новостей")
 public class FeedMessage {
 
+    @ApiModelProperty(
+            value = "Заголовок",
+            required = true,
+            example = "someTitle"
+    )
     String title;
-    String description;
+
+    @ApiModelProperty(
+            value = "Ссылка на RSS ленту",
+            required = true,
+            example = "https://somesite.su"
+    )
     String link;
+
+    @ApiModelProperty(
+            value = "Автор",
+            required = true,
+            example = "Some Author"
+    )
     String author;
-    String guid;
 
     public String getTitle() {
         return title;
@@ -14,14 +33,6 @@ public class FeedMessage {
 
     public void setTitle(String title) {
         this.title = title;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 
     public String getLink() {
@@ -40,19 +51,9 @@ public class FeedMessage {
         this.author = author;
     }
 
-    public String getGuid() {
-        return guid;
-    }
-
-    public void setGuid(String guid) {
-        this.guid = guid;
-    }
-
     @Override
     public String toString() {
-        return "FeedMessage [title=" + title + ", description=" + description
-                + ", link=" + link + ", author=" + author + ", guid=" + guid
-                + "]";
+        return "[title = " + title + ", link = " + link + ", author = " + author + "]";
     }
 
 }

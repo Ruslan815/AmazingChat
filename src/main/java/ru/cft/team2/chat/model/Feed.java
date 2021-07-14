@@ -1,17 +1,58 @@
 package ru.cft.team2.chat.model;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 import java.util.ArrayList;
 import java.util.List;
 
+@ApiModel(description = "Новость")
 public class Feed {
 
+    @ApiModelProperty(
+            value = "Заголовок",
+            required = true,
+            example = "someTitle"
+    )
     final String title;
+
+    @ApiModelProperty(
+            value = "Ссылка на RSS ленту",
+            required = true,
+            example = "https://somesite.su"
+    )
     final String link;
+
+    @ApiModelProperty(
+            value = "Описание",
+            required = true,
+            example = "someDescription"
+    )
     final String description;
+
+    @ApiModelProperty(
+            value = "Язык",
+            required = true,
+            example = "russian"
+    )
     final String language;
+
+    @ApiModelProperty(
+            value = "Авторское право",
+            required = true
+    )
     final String copyright;
+
+    @ApiModelProperty(
+            value = "Дата публикации",
+            required = true,
+            example = "14-07-2021"
+    )
     final String pubDate;
 
+    @ApiModelProperty(
+            value = "Список входящих новостей"
+    )
     final List<FeedMessage> entries = new ArrayList<FeedMessage>();
 
     public Feed(String title, String link, String description, String language,

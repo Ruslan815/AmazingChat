@@ -21,6 +21,10 @@ public class ChatView {
     )
     private String name;
 
+    @ApiModelProperty(
+            value = "Ссылка на RSS ленту",
+            example = "https://somesite.su"
+    )
     private String rssLink;
 
     public ChatView(Chat chat) {

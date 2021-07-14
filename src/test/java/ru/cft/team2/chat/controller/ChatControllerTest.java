@@ -39,9 +39,10 @@ class ChatControllerTest {
     private final String name = "someName";
     ObjectMapper objectMapper = new ObjectMapper();
 
-    /*@Test
+    @Test
     void createSuccessfulPrivateChat() {
         Chat passedChat = new Chat(chatId, name);
+        passedChat.setRssLink("https://lenta.ru/rss/news");
         ChatView expectedChat = new ChatView(chatId, name);
         ResponseEntity expectedResponse = ResponseEntity.ok(expectedChat);
         try {
@@ -58,7 +59,40 @@ class ChatControllerTest {
     @Test
     void createFailedChatNameNotFound() {
         Chat passedChat = new Chat(chatId, name);
+        passedChat.setRssLink("https://lenta.ru/rss/news");
         ResponseEntity expectedResponse = ResponseEntity.internalServerError().body(ValidationResult.CHAT_NAME_NOT_FOUND);
+        try {
+            Mockito.when(chatService.create(passedChat)).thenThrow(Exception.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        ResponseEntity actualResponse = chatController.create(passedChat);
+
+        assertEquals(expectedResponse, actualResponse);
+    }
+
+    @Test
+    void createFailedMalformedRssLink() {
+        Chat passedChat = new Chat(chatId, name);
+        passedChat.setRssLink("errorLink");
+        ResponseEntity expectedResponse = ResponseEntity.internalServerError().body(ValidationResult.MALFORMED_RSS_LINK);
+        try {
+            Mockito.when(chatService.create(passedChat)).thenThrow(Exception.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        ResponseEntity actualResponse = chatController.create(passedChat);
+
+        assertEquals(expectedResponse, actualResponse);
+    }
+
+    @Test
+    void createFailedUrlConnectionFailed() {
+        Chat passedChat = new Chat(chatId, name);
+        passedChat.setRssLink("https://somesite.su");
+        ResponseEntity expectedResponse = ResponseEntity.internalServerError().body(ValidationResult.URL_CONNECTION_FAILED);
         try {
             Mockito.when(chatService.create(passedChat)).thenThrow(Exception.class);
         } catch (Exception e) {
@@ -200,5 +234,5 @@ class ChatControllerTest {
         ResponseEntity actualResponse = chatController.leaveChat(chatMember);
 
         assertEquals(expectedResponse, actualResponse);
-    }*/
+    }
 }
