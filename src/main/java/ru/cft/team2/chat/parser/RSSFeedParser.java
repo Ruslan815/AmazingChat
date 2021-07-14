@@ -28,15 +28,15 @@ public class RSSFeedParser {
 
     final URL url;
 
-    public RSSFeedParser(String feedUrl) {
+    public RSSFeedParser(String feedUrl) throws MalformedURLException {
         try {
             this.url = new URL(feedUrl);
         } catch (MalformedURLException e) {
-            throw new RuntimeException(e);
+            throw e;
         }
     }
 
-    public Feed readFeed() {
+    public Feed readFeed() throws IOException, XMLStreamException {
         Feed feed = null;
         try {
             boolean isFeedHeader = true;
@@ -110,7 +110,7 @@ public class RSSFeedParser {
                 }
             }
         } catch (XMLStreamException e) {
-            throw new RuntimeException(e);
+            throw e;
         }
         return feed;
     }
@@ -125,11 +125,11 @@ public class RSSFeedParser {
         return result;
     }
 
-    private InputStream read() {
+    private InputStream read() throws IOException {
         try {
             return url.openStream();
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw e;
         }
     }
 }

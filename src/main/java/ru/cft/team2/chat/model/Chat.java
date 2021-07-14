@@ -20,13 +20,14 @@ public class Chat {
     )
     private Integer chatId;
 
-    @Column
     @ApiModelProperty(
             value = "Имя чата",
             required = true,
             example = "someName"
     )
     private String name;
+
+    private String rssLink;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @ApiModelProperty(
@@ -56,6 +57,14 @@ public class Chat {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getRssLink() {
+        return rssLink;
+    }
+
+    public void setRssLink(String rssLink) {
+        this.rssLink = rssLink;
     }
 
     public Set<User> getChatMembers() {
