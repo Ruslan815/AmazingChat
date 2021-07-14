@@ -149,7 +149,7 @@ class MessageControllerTest {
         }).when(messageService).readMessages(Mockito.any(), eq(null));
         Mockito.when(messageService.getAllByChatId(null)).thenReturn(expectedList);
 
-        ResponseEntity actualResponse = messageController.read(userId,null);
+        ResponseEntity actualResponse = messageController.read(userId, null);
 
         verify(messageService, times(1)).readMessages(Mockito.any(), eq(null));
         assertEquals(expectedResponse, actualResponse);

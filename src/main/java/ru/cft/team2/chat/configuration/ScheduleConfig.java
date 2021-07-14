@@ -39,13 +39,13 @@ public class ScheduleConfig {
                 try {
                     RSSFeedParser rssFeedParser = new RSSFeedParser(someChat.getRssLink());
                     Feed feed = rssFeedParser.readFeed();
-                    System.out.println("Последняя новость в ленте:\n" + feed.getMessages().get(0).toString());
                     long currentTimeInMillis = System.currentTimeMillis();
                     SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                     Message rssMessage = new Message(null, -1, someChat.getChatId(), "Последняя новость в ленте: " + feed.getMessages().get(0).toString(), formatter.format(currentTimeInMillis));
                     rssMessage.setSendTimeSec(currentTimeInMillis / 1000);
                     messageService.create(rssMessage);
-                } catch (Exception ignored) {}
+                } catch (Exception ignored) {
+                }
             }
         }
     }

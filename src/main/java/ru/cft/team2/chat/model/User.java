@@ -45,7 +45,8 @@ public class User {
     )
     private List<Message> unreadMessages = new ArrayList<>();
 
-    public User() {}
+    public User() {
+    }
 
     public User(Integer id, String firstName, String lastName) {
         this.id = id;

@@ -83,7 +83,8 @@ public class Message {
         this.sendTime = sendTime;
     }
 
-    public Message() {}
+    public Message() {
+    }
 
     public Integer getMessageId() {
         return messageId;
