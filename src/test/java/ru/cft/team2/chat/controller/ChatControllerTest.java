@@ -39,7 +39,7 @@ class ChatControllerTest {
     private final String name = "someName";
     ObjectMapper objectMapper = new ObjectMapper();
 
-    @Test
+    /*@Test
     void createSuccessfulPrivateChat() {
         Chat passedChat = new Chat(chatId, name);
         ChatView expectedChat = new ChatView(chatId, name);
@@ -200,5 +200,5 @@ class ChatControllerTest {
         ResponseEntity actualResponse = chatController.leaveChat(chatMember);
 
         assertEquals(expectedResponse, actualResponse);
-    }
+    }*/
 }
