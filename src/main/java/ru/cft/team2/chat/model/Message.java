@@ -70,6 +70,9 @@ public class Message {
     private Long delaySec;
 
     @ManyToMany(fetch = FetchType.LAZY)
+    @ApiModelProperty(
+            value = "Список пользователей чата, которые не прочитали данное сообщение"
+    )
     private List<User> usersWhoDidNotRead = new ArrayList<>();
 
     public Message(Integer messageId, Integer userId, Integer chatId, String text, String sendTime) {

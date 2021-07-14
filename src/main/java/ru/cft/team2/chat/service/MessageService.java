@@ -55,7 +55,7 @@ public class MessageService {
         List<Message> chatMessagesList = messageRepository.findAllByChatId(chatId, Sort.by(Sort.Direction.DESC, "sendTime"));
         List<MessageView> responseList = new ArrayList<>();
         for (Message someMessage : chatMessagesList) {
-            if (someMessage.getUsersWhoDidNotRead().remove(someUser)) { //TODO: Удалится ли пользоваетель из списка не прочитавших сообщение? Да!!!
+            if (someMessage.getUsersWhoDidNotRead().remove(someUser)) {
                 responseList.add(new MessageView(someMessage));
             }
         }
