@@ -42,7 +42,6 @@ class ChatControllerTest {
     @Test
     void createSuccessfulPrivateChat() {
         Chat passedChat = new Chat(chatId, name);
-        passedChat.setRssLink("https://lenta.ru/rss/news");
         ChatView expectedChat = new ChatView(chatId, name);
         ResponseEntity expectedResponse = ResponseEntity.ok(expectedChat);
         try {
@@ -59,7 +58,6 @@ class ChatControllerTest {
     @Test
     void createFailedChatNameNotFound() {
         Chat passedChat = new Chat(chatId, name);
-        passedChat.setRssLink("https://lenta.ru/rss/news");
         ResponseEntity expectedResponse = ResponseEntity.internalServerError().body(ValidationResult.CHAT_NAME_NOT_FOUND);
         try {
             Mockito.when(chatService.create(passedChat)).thenThrow(Exception.class);

@@ -42,8 +42,10 @@ public class ChatController {
         ResponseEntity responseEntity;
         ChatView response;
         try {
-            RSSFeedParser parser = new RSSFeedParser(someChat.getRssLink());
-            parser.readFeed();
+            if(someChat.getRssLink() != null) {
+                RSSFeedParser parser = new RSSFeedParser(someChat.getRssLink());
+                parser.readFeed();
+            }
             response = chatService.create(someChat);
             responseEntity = ResponseEntity.ok(response);
         } catch (MalformedURLException e) {
