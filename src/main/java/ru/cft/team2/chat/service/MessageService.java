@@ -52,6 +52,7 @@ public class MessageService {
     }
 
     public List<MessageView> readMessages(User someUser, Integer chatId) {
+        deleteOldMessages();
         List<Message> chatMessagesList = messageRepository.findAllByChatId(chatId, Sort.by(Sort.Direction.DESC, "sendTime"));
         List<MessageView> responseList = new ArrayList<>();
         for (Message someMessage : chatMessagesList) {

@@ -30,33 +30,33 @@ class UserControllerTest {
     void createSuccessful() {
         User passedUser = new User(null, "cat", "dog");
         UserView expectedUser = new UserView(1, "cat", "dog");
-        ResponseEntity expectedResponse = ResponseEntity.ok(expectedUser);
+        ResponseEntity<?> expectedResponse = ResponseEntity.ok(expectedUser);
         Mockito.when(userService.create(passedUser)).thenReturn(expectedUser);
-        ResponseEntity actualResponse = userController.create(passedUser);
+        ResponseEntity<?> actualResponse = userController.create(passedUser);
         assertEquals(expectedResponse, actualResponse);
     }
 
     @Test
     void createFailedFirstnameNotFound() {
         User passedUser = new User(null, null, "dog");
-        ResponseEntity expectedResponse = ResponseEntity.internalServerError().body(ValidationResult.FIRSTNAME_NOT_FOUND);
-        ResponseEntity actualResponse = userController.create(passedUser);
+        ResponseEntity<?> expectedResponse = ResponseEntity.internalServerError().body(ValidationResult.FIRSTNAME_NOT_FOUND);
+        ResponseEntity<?> actualResponse = userController.create(passedUser);
         assertEquals(expectedResponse, actualResponse);
     }
 
     @Test
     void createFailedLastnameNotFound() {
         User passedUser = new User(null, "cat", null);
-        ResponseEntity expectedResponse = ResponseEntity.internalServerError().body(ValidationResult.LASTNAME_NOT_FOUND);
-        ResponseEntity actualResponse = userController.create(passedUser);
+        ResponseEntity<?> expectedResponse = ResponseEntity.internalServerError().body(ValidationResult.LASTNAME_NOT_FOUND);
+        ResponseEntity<?> actualResponse = userController.create(passedUser);
         assertEquals(expectedResponse, actualResponse);
     }
 
     @Test
     void createFailedFirstnameAndLastnameNotFound() {
         User passedUser = new User(null, null, null);
-        ResponseEntity expectedResponse = ResponseEntity.internalServerError().body(ValidationResult.FIRSTNAME_AND_LASTNAME_NOT_FOUND);
-        ResponseEntity actualResponse = userController.create(passedUser);
+        ResponseEntity<?> expectedResponse = ResponseEntity.internalServerError().body(ValidationResult.FIRSTNAME_AND_LASTNAME_NOT_FOUND);
+        ResponseEntity<?> actualResponse = userController.create(passedUser);
         assertEquals(expectedResponse, actualResponse);
     }
 
@@ -84,18 +84,18 @@ class UserControllerTest {
     void getSuccessful() {
         Integer userId = 42;
         UserView expectedUser = new UserView(userId, "cat", "dog");
-        ResponseEntity expectedResponse = ResponseEntity.ok(expectedUser);
+        ResponseEntity<?> expectedResponse = ResponseEntity.ok(expectedUser);
         Mockito.when(userService.getUserView(userId)).thenReturn(expectedUser);
-        ResponseEntity actualResponse = userController.get(userId);
+        ResponseEntity<?> actualResponse = userController.get(userId);
         assertEquals(expectedResponse, actualResponse);
     }
 
     @Test
     void getFailed() {
         Integer userId = 1337;
-        ResponseEntity expectedResponse = ResponseEntity.internalServerError().body(ValidationResult.USER_NOT_FOUND);
+        ResponseEntity<?> expectedResponse = ResponseEntity.internalServerError().body(ValidationResult.USER_NOT_FOUND);
         Mockito.when(userService.getUserView(userId)).thenThrow(NoSuchElementException.class);
-        ResponseEntity actualResponse = userController.get(userId);
+        ResponseEntity<?> actualResponse = userController.get(userId);
         assertEquals(expectedResponse, actualResponse);
     }
 
@@ -104,13 +104,13 @@ class UserControllerTest {
         Integer userId = 1;
         User updatedUser = new User(null, "newCat", "newDog");
         UserView expectedUser = new UserView(userId, "newCat", "newDog");
-        ResponseEntity expectedResponse = ResponseEntity.ok(expectedUser);
+        ResponseEntity<?> expectedResponse = ResponseEntity.ok(expectedUser);
         try {
             Mockito.when(userService.update(updatedUser, userId)).thenReturn(expectedUser);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        ResponseEntity actualResponse = userController.update(userId, updatedUser);
+        ResponseEntity<?> actualResponse = userController.update(userId, updatedUser);
         assertEquals(expectedResponse, actualResponse);
     }
 
@@ -118,13 +118,13 @@ class UserControllerTest {
     void updateFailedUserNotFound() {
         Integer userId = 1;
         User updatedUser = new User(null, "newCat", "newDog");
-        ResponseEntity expectedResponse = ResponseEntity.internalServerError().body(ValidationResult.USER_NOT_FOUND);
+        ResponseEntity<?> expectedResponse = ResponseEntity.internalServerError().body(ValidationResult.USER_NOT_FOUND);
         try {
             Mockito.when(userService.update(updatedUser, userId)).thenThrow(Exception.class);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        ResponseEntity actualResponse = userController.update(userId, updatedUser);
+        ResponseEntity<?> actualResponse = userController.update(userId, updatedUser);
         assertEquals(expectedResponse, actualResponse);
     }
 
@@ -132,8 +132,8 @@ class UserControllerTest {
     void updateFailedFirstnameNotFound() {
         Integer userId = 1;
         User updatedUser = new User(null, null, "newDog");
-        ResponseEntity expectedResponse = ResponseEntity.internalServerError().body(ValidationResult.FIRSTNAME_NOT_FOUND);
-        ResponseEntity actualResponse = userController.update(userId, updatedUser);
+        ResponseEntity<?> expectedResponse = ResponseEntity.internalServerError().body(ValidationResult.FIRSTNAME_NOT_FOUND);
+        ResponseEntity<?> actualResponse = userController.update(userId, updatedUser);
         assertEquals(expectedResponse, actualResponse);
     }
 
@@ -141,8 +141,8 @@ class UserControllerTest {
     void updateFailedLastnameNotFound() {
         Integer userId = 1;
         User updatedUser = new User(null, "newCat", null);
-        ResponseEntity expectedResponse = ResponseEntity.internalServerError().body(ValidationResult.LASTNAME_NOT_FOUND);
-        ResponseEntity actualResponse = userController.update(userId, updatedUser);
+        ResponseEntity<?> expectedResponse = ResponseEntity.internalServerError().body(ValidationResult.LASTNAME_NOT_FOUND);
+        ResponseEntity<?> actualResponse = userController.update(userId, updatedUser);
         assertEquals(expectedResponse, actualResponse);
     }
 
@@ -150,8 +150,8 @@ class UserControllerTest {
     void updateFailedFirstnameAndLastnameNotFound() {
         Integer userId = 1;
         User updatedUser = new User(null, null, null);
-        ResponseEntity expectedResponse = ResponseEntity.internalServerError().body(ValidationResult.FIRSTNAME_AND_LASTNAME_NOT_FOUND);
-        ResponseEntity actualResponse = userController.update(userId, updatedUser);
+        ResponseEntity<?> expectedResponse = ResponseEntity.internalServerError().body(ValidationResult.FIRSTNAME_AND_LASTNAME_NOT_FOUND);
+        ResponseEntity<?> actualResponse = userController.update(userId, updatedUser);
         assertEquals(expectedResponse, actualResponse);
     }
 }

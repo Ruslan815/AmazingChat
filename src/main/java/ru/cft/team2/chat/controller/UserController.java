@@ -12,6 +12,7 @@ import ru.cft.team2.chat.service.UserService;
 import ru.cft.team2.chat.error.ErrorHandler;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 @Api(tags = "Пользователи")
 @RestController

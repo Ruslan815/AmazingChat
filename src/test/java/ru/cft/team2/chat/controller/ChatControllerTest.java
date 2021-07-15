@@ -22,6 +22,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.eq;
 
+@SuppressWarnings("rawtypes")
 @SpringBootTest
 class ChatControllerTest {
 
@@ -37,20 +38,20 @@ class ChatControllerTest {
     private final Integer userId = 1;
     private final Integer chatId = 1;
     private final String name = "someName";
-    ObjectMapper objectMapper = new ObjectMapper();
+    final ObjectMapper objectMapper = new ObjectMapper();
 
     @Test
     void createSuccessfulPrivateChat() {
         Chat passedChat = new Chat(chatId, name);
         ChatView expectedChat = new ChatView(chatId, name);
-        ResponseEntity expectedResponse = ResponseEntity.ok(expectedChat);
+        ResponseEntity<?> expectedResponse = ResponseEntity.ok(expectedChat);
         try {
             Mockito.when(chatService.create(passedChat)).thenReturn(expectedChat);
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        ResponseEntity actualResponse = chatController.create(passedChat);
+        ResponseEntity<?> actualResponse = chatController.create(passedChat);
 
         assertEquals(expectedResponse, actualResponse);
     }
@@ -58,14 +59,14 @@ class ChatControllerTest {
     @Test
     void createFailedChatNameNotFound() {
         Chat passedChat = new Chat(chatId, name);
-        ResponseEntity expectedResponse = ResponseEntity.internalServerError().body(ValidationResult.CHAT_NAME_NOT_FOUND);
+        ResponseEntity<?> expectedResponse = ResponseEntity.internalServerError().body(ValidationResult.CHAT_NAME_NOT_FOUND);
         try {
             Mockito.when(chatService.create(passedChat)).thenThrow(Exception.class);
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        ResponseEntity actualResponse = chatController.create(passedChat);
+        ResponseEntity<?> actualResponse = chatController.create(passedChat);
 
         assertEquals(expectedResponse, actualResponse);
     }
@@ -74,14 +75,14 @@ class ChatControllerTest {
     void createFailedMalformedRssLink() {
         Chat passedChat = new Chat(chatId, name);
         passedChat.setRssLink("errorLink");
-        ResponseEntity expectedResponse = ResponseEntity.internalServerError().body(ValidationResult.MALFORMED_RSS_LINK);
+        ResponseEntity<?> expectedResponse = ResponseEntity.internalServerError().body(ValidationResult.MALFORMED_RSS_LINK);
         try {
             Mockito.when(chatService.create(passedChat)).thenThrow(Exception.class);
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        ResponseEntity actualResponse = chatController.create(passedChat);
+        ResponseEntity<?> actualResponse = chatController.create(passedChat);
 
         assertEquals(expectedResponse, actualResponse);
     }
@@ -90,14 +91,14 @@ class ChatControllerTest {
     void createFailedUrlConnectionFailed() {
         Chat passedChat = new Chat(chatId, name);
         passedChat.setRssLink("https://somesite.su");
-        ResponseEntity expectedResponse = ResponseEntity.internalServerError().body(ValidationResult.URL_CONNECTION_FAILED);
+        ResponseEntity<?> expectedResponse = ResponseEntity.internalServerError().body(ValidationResult.URL_CONNECTION_FAILED);
         try {
             Mockito.when(chatService.create(passedChat)).thenThrow(Exception.class);
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        ResponseEntity actualResponse = chatController.create(passedChat);
+        ResponseEntity<?> actualResponse = chatController.create(passedChat);
 
         assertEquals(expectedResponse, actualResponse);
     }
@@ -127,7 +128,7 @@ class ChatControllerTest {
     @Test
     void enterChatSuccessful() {
         ChatMember chatMember = new ChatMember(userId, chatId);
-        ResponseEntity expectedResponse = null;
+        ResponseEntity<?> expectedResponse = null;
         try {
             JsonNode jsonResponse = objectMapper.readTree("{\"enterStatus\": \"You successful entered the chat №" + chatId + "\"}");
             expectedResponse = ResponseEntity.ok(jsonResponse);
@@ -138,7 +139,7 @@ class ChatControllerTest {
         Mockito.when(chatService.isPrivateChatExist(chatId)).thenReturn(true);
         Mockito.when(chatService.enterChat(Mockito.any(), eq(chatId))).thenReturn(true);
 
-        ResponseEntity actualResponse = chatController.enterChat(chatMember);
+        ResponseEntity<?> actualResponse = chatController.enterChat(chatMember);
 
         assertEquals(expectedResponse, actualResponse);
     }
@@ -146,10 +147,10 @@ class ChatControllerTest {
     @Test
     void enterChatFailedUserNotFound() {
         ChatMember chatMember = new ChatMember(userId, chatId);
-        ResponseEntity expectedResponse = ResponseEntity.internalServerError().body(ValidationResult.USER_NOT_FOUND);
+        ResponseEntity<?> expectedResponse = ResponseEntity.internalServerError().body(ValidationResult.USER_NOT_FOUND);
         Mockito.when(userService.isUserExist(userId)).thenReturn(false);
 
-        ResponseEntity actualResponse = chatController.enterChat(chatMember);
+        ResponseEntity<?> actualResponse = chatController.enterChat(chatMember);
 
         assertEquals(expectedResponse, actualResponse);
     }
@@ -157,11 +158,11 @@ class ChatControllerTest {
     @Test
     void enterChatFailedChatNotFound() {
         ChatMember chatMember = new ChatMember(userId, chatId);
-        ResponseEntity expectedResponse = ResponseEntity.internalServerError().body(ValidationResult.CHAT_NOT_FOUND);
+        ResponseEntity<?> expectedResponse = ResponseEntity.internalServerError().body(ValidationResult.CHAT_NOT_FOUND);
         Mockito.when(userService.isUserExist(userId)).thenReturn(true);
         Mockito.when(chatService.isPrivateChatExist(chatId)).thenReturn(false);
 
-        ResponseEntity actualResponse = chatController.enterChat(chatMember);
+        ResponseEntity<?> actualResponse = chatController.enterChat(chatMember);
 
         assertEquals(expectedResponse, actualResponse);
     }
@@ -169,12 +170,12 @@ class ChatControllerTest {
     @Test
     void enterChatFailedUserAlreadyInChat() {
         ChatMember chatMember = new ChatMember(userId, chatId);
-        ResponseEntity expectedResponse = ResponseEntity.internalServerError().body(ValidationResult.USER_ALREADY_IN_CHAT);
+        ResponseEntity<?> expectedResponse = ResponseEntity.internalServerError().body(ValidationResult.USER_ALREADY_IN_CHAT);
         Mockito.when(userService.isUserExist(userId)).thenReturn(true);
         Mockito.when(chatService.isPrivateChatExist(chatId)).thenReturn(true);
         Mockito.when(chatService.enterChat(Mockito.any(), eq(chatId))).thenReturn(false);
 
-        ResponseEntity actualResponse = chatController.enterChat(chatMember);
+        ResponseEntity<?> actualResponse = chatController.enterChat(chatMember);
 
         assertEquals(expectedResponse, actualResponse);
     }
@@ -182,7 +183,7 @@ class ChatControllerTest {
     @Test
     void leaveChatSuccessful() {
         ChatMember chatMember = new ChatMember(userId, chatId);
-        ResponseEntity expectedResponse = null;
+        ResponseEntity<?> expectedResponse = null;
         try {
             JsonNode jsonResponse = objectMapper.readTree("{\"leaveStatus\": \"You successful left the chat №" + chatId + "\"}");
             expectedResponse = ResponseEntity.ok(jsonResponse);
@@ -193,7 +194,7 @@ class ChatControllerTest {
         Mockito.when(chatService.isPrivateChatExist(chatId)).thenReturn(true);
         Mockito.when(chatService.leaveChat(Mockito.any(), eq(chatId))).thenReturn(true);
 
-        ResponseEntity actualResponse = chatController.leaveChat(chatMember);
+        ResponseEntity<?> actualResponse = chatController.leaveChat(chatMember);
 
         assertEquals(expectedResponse, actualResponse);
     }
@@ -201,10 +202,10 @@ class ChatControllerTest {
     @Test
     void leaveChatFailedUserNotFound() {
         ChatMember chatMember = new ChatMember(userId, chatId);
-        ResponseEntity expectedResponse = ResponseEntity.internalServerError().body(ValidationResult.USER_NOT_FOUND);
+        ResponseEntity<?> expectedResponse = ResponseEntity.internalServerError().body(ValidationResult.USER_NOT_FOUND);
         Mockito.when(userService.isUserExist(userId)).thenReturn(false);
 
-        ResponseEntity actualResponse = chatController.leaveChat(chatMember);
+        ResponseEntity<?> actualResponse = chatController.leaveChat(chatMember);
 
         assertEquals(expectedResponse, actualResponse);
     }
@@ -212,11 +213,11 @@ class ChatControllerTest {
     @Test
     void leaveChatFailedChatNotFound() {
         ChatMember chatMember = new ChatMember(userId, chatId);
-        ResponseEntity expectedResponse = ResponseEntity.internalServerError().body(ValidationResult.CHAT_NOT_FOUND);
+        ResponseEntity<?> expectedResponse = ResponseEntity.internalServerError().body(ValidationResult.CHAT_NOT_FOUND);
         Mockito.when(userService.isUserExist(userId)).thenReturn(true);
         Mockito.when(chatService.isPrivateChatExist(chatId)).thenReturn(false);
 
-        ResponseEntity actualResponse = chatController.leaveChat(chatMember);
+        ResponseEntity<?> actualResponse = chatController.leaveChat(chatMember);
 
         assertEquals(expectedResponse, actualResponse);
     }
@@ -224,12 +225,12 @@ class ChatControllerTest {
     @Test
     void leaveChatFailedUserNotInChat() {
         ChatMember chatMember = new ChatMember(userId, chatId);
-        ResponseEntity expectedResponse = ResponseEntity.internalServerError().body(ValidationResult.USER_NOT_IN_CHAT);
+        ResponseEntity<?> expectedResponse = ResponseEntity.internalServerError().body(ValidationResult.USER_NOT_IN_CHAT);
         Mockito.when(userService.isUserExist(userId)).thenReturn(true);
         Mockito.when(chatService.isPrivateChatExist(chatId)).thenReturn(true);
         Mockito.when(chatService.enterChat(Mockito.any(), eq(chatId))).thenReturn(false);
 
-        ResponseEntity actualResponse = chatController.leaveChat(chatMember);
+        ResponseEntity<?> actualResponse = chatController.leaveChat(chatMember);
 
         assertEquals(expectedResponse, actualResponse);
     }

@@ -87,7 +87,7 @@ public class MessageController {
         boolean isUserExist = userService.isUserExist(userId);
         boolean isChatExist = (chatId == null || chatService.isPrivateChatExist(chatId));
         boolean isUserInChat = (chatId == null || (isUserExist && chatService.isUserInPrivateChat(userService.getUser(userId), chatId)));
-        ResponseEntity responseEntity;
+        ResponseEntity<?> responseEntity;
         if (isUserExist && isChatExist && isUserInChat) {
             messageService.readMessages(userService.getUser(userId), chatId); // Marks unread messages in this chat for this user as read
             responseEntity = ResponseEntity.ok(messageService.getAllByChatId(chatId));
@@ -116,7 +116,7 @@ public class MessageController {
         boolean isUserExist = userService.isUserExist(userId);
         boolean isChatExist = (chatId == null || chatService.isPrivateChatExist(chatId));
         boolean isUserInChat = (chatId == null || (isUserExist && chatService.isUserInPrivateChat(userService.getUser(userId), chatId)));
-        ResponseEntity responseEntity;
+        ResponseEntity<?> responseEntity;
         if (isUserExist && isChatExist && isUserInChat) {
             responseEntity = ResponseEntity.ok(messageService.readMessages(userService.getUser(userId), chatId));
         } else if (!isUserExist) {

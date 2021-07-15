@@ -1,13 +1,10 @@
 package ru.cft.team2.chat.model;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
-
 public class AttachView {
 
     private String fileName;
 
-    public AttachView(Attach attach) throws UnsupportedEncodingException {
+    public AttachView(Attach attach) {
         this.setFileName(attach.getFile().getOriginalFilename());
     }
 

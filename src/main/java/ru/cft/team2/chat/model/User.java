@@ -9,6 +9,7 @@ import java.util.*;
 @ApiModel(description = "Пользователь")
 @Entity(name = "users")
 public class User {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @ApiModelProperty(

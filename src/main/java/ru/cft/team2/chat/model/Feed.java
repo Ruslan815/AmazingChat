@@ -53,7 +53,7 @@ public class Feed {
     @ApiModelProperty(
             value = "Список входящих новостей"
     )
-    final List<FeedMessage> entries = new ArrayList<FeedMessage>();
+    final List<FeedMessage> entries = new ArrayList<>();
 
     public Feed(String title, String link, String description, String language,
                 String copyright, String pubDate) {

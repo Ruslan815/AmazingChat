@@ -7,13 +7,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import ru.cft.team2.chat.model.Attach;
 import ru.cft.team2.chat.model.AttachView;
 
-import java.io.UnsupportedEncodingException;
-
 @Controller
 public class FileUploadController {
 
     @PostMapping("/attach")
-    public ResponseEntity<?> handleFileUpload(@ModelAttribute Attach attach) throws UnsupportedEncodingException {
+    public ResponseEntity<?> handleFileUpload(@ModelAttribute Attach attach) {
+        //attach.file.
         return ResponseEntity.ok(new AttachView(attach));
     }
 
