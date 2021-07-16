@@ -5,7 +5,7 @@ public class AttachView {
     private String fileName;
 
     public AttachView(Attach attach) {
-        this.setFileName(attach.getFile().getOriginalFilename());
+        this.setFileName(attach.getFileName());
     }
 
     public String getFileName() {
