@@ -2,8 +2,6 @@ package ru.cft.team2.chat.model;
 
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.Objects;
 
 public class Attach {
@@ -12,12 +10,10 @@ public class Attach {
     private Integer chatId;
     private MultipartFile file;
 
-    public Attach(Integer userId, Integer chatId, MultipartFile file) throws IOException {
+    public Attach(Integer userId, Integer chatId, MultipartFile file) {
         this.userId = userId;
         this.chatId = chatId;
         this.file = file;
-
-        file.transferTo(new File(System.getProperty("user.dir") + File.separator + "MEGAFILE.txt"));
     }
 
     public Integer getUserId() {
