@@ -12,10 +12,6 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @ApiModelProperty(
-            value = "Идентификатор пользователя",
-            example = "1"
-    )
     private Integer id;
 
     @Column(nullable = false)
@@ -35,15 +31,9 @@ public class User {
     private String lastName;
 
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "chatMembers")
-    @ApiModelProperty(
-            value = "Список доступных чатов для пользователя"
-    )
     private Set<Chat> availableChats = new HashSet<>();
 
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "usersWhoDidNotRead")
-    @ApiModelProperty(
-            value = "Список сообщений, которые не прочитал данный пользователь"
-    )
     private List<Message> unreadMessages = new ArrayList<>();
 
     public User() {

@@ -1,30 +1,9 @@
 package ru.cft.team2.chat.model;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
-
-@ApiModel(description = "Отображение новостей")
 public class FeedMessage {
 
-    @ApiModelProperty(
-            value = "Заголовок",
-            required = true,
-            example = "someTitle"
-    )
     String title;
-
-    @ApiModelProperty(
-            value = "Ссылка на RSS ленту",
-            required = true,
-            example = "https://somesite.su"
-    )
     String link;
-
-    @ApiModelProperty(
-            value = "Автор",
-            required = true,
-            example = "Some Author"
-    )
     String author;
 
     public String getTitle() {
