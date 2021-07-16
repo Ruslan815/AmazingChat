@@ -17,6 +17,7 @@ public class Attach {
     private Integer chatId;
 
     @Column(nullable = false)
+    @Lob
     private byte[] file;
 
     @Column(nullable = false)
