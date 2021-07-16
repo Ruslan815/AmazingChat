@@ -22,7 +22,6 @@ import java.util.List;
 
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest
@@ -52,13 +51,13 @@ class MessageControllerTest {
         String messageTime = formatter.format(new Date());
         Message passedMessage = new Message(null, userId, null, messageText, null);
         MessageView expectedMessage = new MessageView(userId, messageText, messageTime);
-        ResponseEntity expectedResponse = ResponseEntity.ok(expectedMessage);
+        ResponseEntity<?> expectedResponse = ResponseEntity.ok(expectedMessage);
         Mockito.when(userService.isUserExist(userId)).thenReturn(true);
         doAnswer(invocation -> null).when(userService).getAllUsers();
         passedMessage.setSendTime(messageTime);
         Mockito.when(messageService.create(passedMessage)).thenReturn(expectedMessage);
 
-        ResponseEntity actualResponse = messageController.create(passedMessage);
+        ResponseEntity<?> actualResponse = messageController.create(passedMessage);
 
         verify(userService, times(1)).getAllUsers();
         assertEquals(expectedResponse, actualResponse);
@@ -70,7 +69,7 @@ class MessageControllerTest {
         String messageTime = formatter.format(new Date());
         Message passedMessage = new Message(null, userId, chatId, messageText, null);
         MessageView expectedMessage = new MessageView(userId, messageText, messageTime);
-        ResponseEntity expectedResponse = ResponseEntity.ok(expectedMessage);
+        ResponseEntity<?> expectedResponse = ResponseEntity.ok(expectedMessage);
         Mockito.when(userService.isUserExist(userId)).thenReturn(true);
         Mockito.when(chatService.isPrivateChatExist(chatId)).thenReturn(true);
         Mockito.when(chatService.isUserInPrivateChat(Mockito.any(), eq(chatId))).thenReturn(true);
@@ -78,7 +77,7 @@ class MessageControllerTest {
         passedMessage.setSendTime(messageTime);
         Mockito.when(messageService.create(passedMessage)).thenReturn(expectedMessage);
 
-        ResponseEntity actualResponse = messageController.create(passedMessage);
+        ResponseEntity<?> actualResponse = messageController.create(passedMessage);
 
         assertEquals(expectedResponse, actualResponse);
     }
@@ -86,10 +85,10 @@ class MessageControllerTest {
     @Test
     void createFailedUserNotFound() {
         Message passedMessage = new Message(null, userId, null, messageText, null);
-        ResponseEntity expectedResponse = ResponseEntity.internalServerError().body(ValidationResult.USER_NOT_FOUND);
+        ResponseEntity<?> expectedResponse = ResponseEntity.internalServerError().body(ValidationResult.USER_NOT_FOUND);
         Mockito.when(userService.isUserExist(userId)).thenReturn(false);
 
-        ResponseEntity actualResponse = messageController.create(passedMessage);
+        ResponseEntity<?> actualResponse = messageController.create(passedMessage);
 
         assertEquals(expectedResponse, actualResponse);
     }
@@ -97,10 +96,10 @@ class MessageControllerTest {
     @Test
     void createFailedTextNotFound() {
         Message passedMessage = new Message(null, userId, null, null, null);
-        ResponseEntity expectedResponse = ResponseEntity.internalServerError().body(ValidationResult.TEXT_NOT_FOUND);
+        ResponseEntity<?> expectedResponse = ResponseEntity.internalServerError().body(ValidationResult.TEXT_NOT_FOUND);
         Mockito.when(userService.isUserExist(userId)).thenReturn(true);
 
-        ResponseEntity actualResponse = messageController.create(passedMessage);
+        ResponseEntity<?> actualResponse = messageController.create(passedMessage);
 
         assertEquals(expectedResponse, actualResponse);
     }
@@ -108,12 +107,12 @@ class MessageControllerTest {
     @Test
     void createFailedChatNotFound() {
         Message passedMessage = new Message(null, userId, chatId, messageText, null);
-        ResponseEntity expectedResponse = ResponseEntity.internalServerError().body(ValidationResult.CHAT_NOT_FOUND);
+        ResponseEntity<?> expectedResponse = ResponseEntity.internalServerError().body(ValidationResult.CHAT_NOT_FOUND);
         Mockito.when(userService.isUserExist(userId)).thenReturn(true);
         Mockito.when(chatService.isPrivateChatExist(chatId)).thenReturn(false);
         Mockito.when(chatService.isUserInPrivateChat(Mockito.any(), eq(chatId))).thenReturn(false);
 
-        ResponseEntity actualResponse = messageController.create(passedMessage);
+        ResponseEntity<?> actualResponse = messageController.create(passedMessage);
 
         assertEquals(expectedResponse, actualResponse);
     }
@@ -121,13 +120,13 @@ class MessageControllerTest {
     @Test
     void createFailedUserNotInChat() {
         Message passedMessage = new Message(null, userId, chatId, messageText, null);
-        ResponseEntity expectedResponse = ResponseEntity.internalServerError().body(ValidationResult.USER_NOT_IN_CHAT);
+        ResponseEntity<?> expectedResponse = ResponseEntity.internalServerError().body(ValidationResult.USER_NOT_IN_CHAT);
 
         Mockito.when(userService.isUserExist(userId)).thenReturn(true);
         Mockito.when(chatService.isPrivateChatExist(chatId)).thenReturn(true);
         Mockito.when(chatService.isUserInPrivateChat(Mockito.any(), eq(chatId))).thenReturn(false);
 
-        ResponseEntity actualResponse = messageController.create(passedMessage);
+        ResponseEntity<?> actualResponse = messageController.create(passedMessage);
 
         assertEquals(expectedResponse, actualResponse);
     }
@@ -138,7 +137,7 @@ class MessageControllerTest {
         List<MessageView> expectedList = new ArrayList<>();
         expectedList.add(new MessageView(userId, messageText, messageTime));
         expectedList.add(new MessageView(userId + 1, messageText, messageTime));
-        ResponseEntity expectedResponse = ResponseEntity.ok(expectedList);
+        ResponseEntity<?> expectedResponse = ResponseEntity.ok(expectedList);
         Mockito.when(userService.isUserExist(userId)).thenReturn(true);
         doAnswer(invocation -> {
             Object arg0 = invocation.getArgument(0);
@@ -149,7 +148,7 @@ class MessageControllerTest {
         }).when(messageService).readMessages(Mockito.any(), eq(null));
         Mockito.when(messageService.getAllByChatId(null)).thenReturn(expectedList);
 
-        ResponseEntity actualResponse = messageController.read(userId, null);
+        ResponseEntity<?> actualResponse = messageController.read(userId, null);
 
         verify(messageService, times(1)).readMessages(Mockito.any(), eq(null));
         assertEquals(expectedResponse, actualResponse);
@@ -161,7 +160,7 @@ class MessageControllerTest {
         List<MessageView> expectedList = new ArrayList<>();
         expectedList.add(new MessageView(userId, messageText, messageTime));
         expectedList.add(new MessageView(userId + 1, messageText, messageTime));
-        ResponseEntity expectedResponse = ResponseEntity.ok(expectedList);
+        ResponseEntity<?> expectedResponse = ResponseEntity.ok(expectedList);
         Mockito.when(userService.isUserExist(userId)).thenReturn(true);
         Mockito.when(chatService.isPrivateChatExist(chatId)).thenReturn(true);
         Mockito.when(chatService.isUserInPrivateChat(Mockito.any(), eq(chatId))).thenReturn(true);
@@ -174,7 +173,7 @@ class MessageControllerTest {
         }).when(messageService).readMessages(Mockito.any(), eq(chatId));
         Mockito.when(messageService.getAllByChatId(chatId)).thenReturn(expectedList);
 
-        ResponseEntity actualResponse = messageController.read(userId, chatId);
+        ResponseEntity<?> actualResponse = messageController.read(userId, chatId);
 
         verify(messageService, times(1)).readMessages(Mockito.any(), eq(chatId));
         assertEquals(expectedResponse, actualResponse);
@@ -182,34 +181,34 @@ class MessageControllerTest {
 
     @Test
     void readFailedUserNotFound() {
-        ResponseEntity expectedResponse = ResponseEntity.internalServerError().body(ValidationResult.USER_NOT_FOUND);
+        ResponseEntity<?> expectedResponse = ResponseEntity.internalServerError().body(ValidationResult.USER_NOT_FOUND);
         Mockito.when(userService.isUserExist(userId)).thenReturn(false);
 
-        ResponseEntity actualResponse = messageController.read(userId, null);
+        ResponseEntity<?> actualResponse = messageController.read(userId, null);
 
         assertEquals(expectedResponse, actualResponse);
     }
 
     @Test
     void readFailedChatNotFound() {
-        ResponseEntity expectedResponse = ResponseEntity.internalServerError().body(ValidationResult.CHAT_NOT_FOUND);
+        ResponseEntity<?> expectedResponse = ResponseEntity.internalServerError().body(ValidationResult.CHAT_NOT_FOUND);
         Mockito.when(userService.isUserExist(userId)).thenReturn(true);
         Mockito.when(chatService.isPrivateChatExist(chatId)).thenReturn(false);
         Mockito.when(chatService.isUserInPrivateChat(Mockito.any(), eq(chatId))).thenReturn(true);
 
-        ResponseEntity actualResponse = messageController.read(userId, chatId);
+        ResponseEntity<?> actualResponse = messageController.read(userId, chatId);
 
         assertEquals(expectedResponse, actualResponse);
     }
 
     @Test
     void readFailedUserNotInChat() {
-        ResponseEntity expectedResponse = ResponseEntity.internalServerError().body(ValidationResult.USER_NOT_IN_CHAT);
+        ResponseEntity<?> expectedResponse = ResponseEntity.internalServerError().body(ValidationResult.USER_NOT_IN_CHAT);
         Mockito.when(userService.isUserExist(userId)).thenReturn(true);
         Mockito.when(chatService.isPrivateChatExist(chatId)).thenReturn(true);
         Mockito.when(chatService.isUserInPrivateChat(Mockito.any(), eq(chatId))).thenReturn(false);
 
-        ResponseEntity actualResponse = messageController.read(userId, chatId);
+        ResponseEntity<?> actualResponse = messageController.read(userId, chatId);
 
         assertEquals(expectedResponse, actualResponse);
     }
@@ -219,11 +218,11 @@ class MessageControllerTest {
         String someTime = "2021-07-14 13:09:00";
         List<MessageView> expectedList = new ArrayList<>();
         expectedList.add(new MessageView(userId, messageText, someTime));
-        ResponseEntity expectedResponse = ResponseEntity.ok(expectedList);
+        ResponseEntity<?> expectedResponse = ResponseEntity.ok(expectedList);
         Mockito.when(userService.isUserExist(userId)).thenReturn(true);
         Mockito.when(messageService.readMessages(Mockito.any(), eq(null))).thenReturn(expectedList);
 
-        ResponseEntity actualResponse = messageController.getUnreadMessages(userId, null);
+        ResponseEntity<?> actualResponse = messageController.getUnreadMessages(userId, null);
 
         assertEquals(expectedResponse, actualResponse);
     }
@@ -233,47 +232,47 @@ class MessageControllerTest {
         String someTime = "2021-07-14 13:09:00";
         List<MessageView> expectedList = new ArrayList<>();
         expectedList.add(new MessageView(userId, messageText, someTime));
-        ResponseEntity expectedResponse = ResponseEntity.ok(expectedList);
+        ResponseEntity<?> expectedResponse = ResponseEntity.ok(expectedList);
         Mockito.when(userService.isUserExist(userId)).thenReturn(true);
         Mockito.when(chatService.isPrivateChatExist(chatId)).thenReturn(true);
         Mockito.when(chatService.isUserInPrivateChat(Mockito.any(), eq(chatId))).thenReturn(true);
         Mockito.when(messageService.readMessages(Mockito.any(), eq(chatId))).thenReturn(expectedList);
 
-        ResponseEntity actualResponse = messageController.getUnreadMessages(userId, chatId);
+        ResponseEntity<?> actualResponse = messageController.getUnreadMessages(userId, chatId);
 
         assertEquals(expectedResponse, actualResponse);
     }
 
     @Test
     void getUnreadMessagesFailedUserNotFound() {
-        ResponseEntity expectedResponse = ResponseEntity.internalServerError().body(ValidationResult.USER_NOT_FOUND);
+        ResponseEntity<?> expectedResponse = ResponseEntity.internalServerError().body(ValidationResult.USER_NOT_FOUND);
         Mockito.when(userService.isUserExist(userId)).thenReturn(false);
 
-        ResponseEntity actualResponse = messageController.getUnreadMessages(userId, null);
+        ResponseEntity<?> actualResponse = messageController.getUnreadMessages(userId, null);
 
         assertEquals(expectedResponse, actualResponse);
     }
 
     @Test
     void getUnreadMessagesFailedChatNotFound() {
-        ResponseEntity expectedResponse = ResponseEntity.internalServerError().body(ValidationResult.CHAT_NOT_FOUND);
+        ResponseEntity<?> expectedResponse = ResponseEntity.internalServerError().body(ValidationResult.CHAT_NOT_FOUND);
         Mockito.when(userService.isUserExist(userId)).thenReturn(true);
         Mockito.when(chatService.isPrivateChatExist(chatId)).thenReturn(false);
         Mockito.when(chatService.isUserInPrivateChat(Mockito.any(), eq(chatId))).thenReturn(true);
 
-        ResponseEntity actualResponse = messageController.getUnreadMessages(userId, chatId);
+        ResponseEntity<?> actualResponse = messageController.getUnreadMessages(userId, chatId);
 
         assertEquals(expectedResponse, actualResponse);
     }
 
     @Test
     void getUnreadMessagesFailedUserNotInChat() {
-        ResponseEntity expectedResponse = ResponseEntity.internalServerError().body(ValidationResult.USER_NOT_IN_CHAT);
+        ResponseEntity<?> expectedResponse = ResponseEntity.internalServerError().body(ValidationResult.USER_NOT_IN_CHAT);
         Mockito.when(userService.isUserExist(userId)).thenReturn(true);
         Mockito.when(chatService.isPrivateChatExist(chatId)).thenReturn(true);
         Mockito.when(chatService.isUserInPrivateChat(Mockito.any(), eq(chatId))).thenReturn(false);
 
-        ResponseEntity actualResponse = messageController.getUnreadMessages(userId, chatId);
+        ResponseEntity<?> actualResponse = messageController.getUnreadMessages(userId, chatId);
 
         assertEquals(expectedResponse, actualResponse);
     }

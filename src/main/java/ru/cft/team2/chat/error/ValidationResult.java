@@ -16,6 +16,7 @@ public enum ValidationResult {
     USER_NOT_IN_CHAT,
     MALFORMED_RSS_LINK,
     URL_CONNECTION_FAILED,
+    FILE_NOT_FOUND,
     UNKNOWN_ERROR,
     NO_ERROR,
     ;

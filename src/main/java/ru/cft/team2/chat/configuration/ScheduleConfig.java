@@ -5,7 +5,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import ru.cft.team2.chat.model.ChatView;
 import ru.cft.team2.chat.model.Feed;
-import ru.cft.team2.chat.model.FeedMessage;
 import ru.cft.team2.chat.model.Message;
 import ru.cft.team2.chat.parser.RSSFeedParser;
 import ru.cft.team2.chat.service.ChatService;

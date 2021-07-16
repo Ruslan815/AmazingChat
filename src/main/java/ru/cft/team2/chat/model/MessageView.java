@@ -1,11 +1,13 @@
 package ru.cft.team2.chat.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.util.Objects;
 
 @ApiModel(description = "Отображение сообщения")
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class MessageView {
 
     @ApiModelProperty(

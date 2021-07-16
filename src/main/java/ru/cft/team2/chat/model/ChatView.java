@@ -1,11 +1,13 @@
 package ru.cft.team2.chat.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.util.Objects;
 
 @ApiModel(description = "Отображение чата")
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ChatView {
     @ApiModelProperty(
             value = "Идентификатор чата",

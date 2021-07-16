@@ -39,7 +39,7 @@ public class ChatController {
             @ApiParam(value = "Название чата, ссылка на RSS ленту (необязательно)", required = true)
             @RequestBody Chat someChat
     ) {
-        ResponseEntity responseEntity;
+        ResponseEntity<?> responseEntity;
         ChatView response;
         try {
             if(someChat.getRssLink() != null) {
@@ -79,7 +79,7 @@ public class ChatController {
                     required = true)
             @RequestBody ChatMember chatMember
     ) {
-        ResponseEntity response;
+        ResponseEntity<?> response;
         Integer userId = chatMember.getUserId();
         Integer chatId = chatMember.getChatId();
 
@@ -91,7 +91,7 @@ public class ChatController {
             if (chatService.enterChat(userService.getUser(userId), chatId)) {
                 ObjectMapper objectMapper = new ObjectMapper();
                 try {
-                    JsonNode jsonResponse = objectMapper.readTree("{\"enterStatus\": \"You successful entered the chat №" + chatId + "\"}");
+                    JsonNode jsonResponse = objectMapper.readTree("{\"enterStatus\": \"You successfully entered the chat №" + chatId + "\"}");
                     response = ResponseEntity.ok(jsonResponse);
                 } catch (JsonProcessingException e) {
                     response = ResponseEntity.internalServerError().body(ValidationResult.UNKNOWN_ERROR);
@@ -113,7 +113,7 @@ public class ChatController {
                     required = true)
             @RequestBody ChatMember chatMember
     ) {
-        ResponseEntity response;
+        ResponseEntity<?> response;
         Integer userId = chatMember.getUserId();
         Integer chatId = chatMember.getChatId();
 
@@ -125,7 +125,7 @@ public class ChatController {
             if (chatService.leaveChat(userService.getUser(userId), chatId)) {
                 ObjectMapper objectMapper = new ObjectMapper();
                 try {
-                    JsonNode jsonResponse = objectMapper.readTree("{\"leaveStatus\": \"You successful left the chat №" + chatId + "\"}");
+                    JsonNode jsonResponse = objectMapper.readTree("{\"leaveStatus\": \"You successfully left the chat №" + chatId + "\"}");
                     response = ResponseEntity.ok(jsonResponse);
                 } catch (JsonProcessingException e) {
                     response = ResponseEntity.internalServerError().body(ValidationResult.UNKNOWN_ERROR);
