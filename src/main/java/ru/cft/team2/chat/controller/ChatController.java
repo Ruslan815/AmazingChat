@@ -125,7 +125,7 @@ public class ChatController {
             if (chatService.leaveChat(userService.getUser(userId), chatId)) {
                 ObjectMapper objectMapper = new ObjectMapper();
                 try {
-                    JsonNode jsonResponse = objectMapper.readTree("{\"leaveStatus\": \"You successful left the chat №" + chatId + "\"}");
+                    JsonNode jsonResponse = objectMapper.readTree("{\"leaveStatus\": \"You successfully left the chat №" + chatId + "\"}");
                     response = ResponseEntity.ok(jsonResponse);
                 } catch (JsonProcessingException e) {
                     response = ResponseEntity.internalServerError().body(ValidationResult.UNKNOWN_ERROR);

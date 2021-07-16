@@ -129,7 +129,7 @@ class ChatControllerTest {
         ChatMember chatMember = new ChatMember(userId, chatId);
         ResponseEntity<?> expectedResponse = null;
         try {
-            JsonNode jsonResponse = objectMapper.readTree("{\"enterStatus\": \"You successful entered the chat №" + chatId + "\"}");
+            JsonNode jsonResponse = objectMapper.readTree("{\"enterStatus\": \"You successfully entered the chat №" + chatId + "\"}");
             expectedResponse = ResponseEntity.ok(jsonResponse);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
@@ -184,7 +184,7 @@ class ChatControllerTest {
         ChatMember chatMember = new ChatMember(userId, chatId);
         ResponseEntity<?> expectedResponse = null;
         try {
-            JsonNode jsonResponse = objectMapper.readTree("{\"leaveStatus\": \"You successful left the chat №" + chatId + "\"}");
+            JsonNode jsonResponse = objectMapper.readTree("{\"leaveStatus\": \"You successfully left the chat №" + chatId + "\"}");
             expectedResponse = ResponseEntity.ok(jsonResponse);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
