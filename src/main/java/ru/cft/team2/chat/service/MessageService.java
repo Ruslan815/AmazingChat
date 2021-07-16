@@ -4,6 +4,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ru.cft.team2.chat.model.Message;
 import ru.cft.team2.chat.model.MessageView;
+import ru.cft.team2.chat.model.User;
 import ru.cft.team2.chat.repository.MessageRepository;
 
 import java.util.ArrayList;
@@ -22,11 +23,44 @@ public class MessageService {
     }
 
     public List<MessageView> getAllByChatId(Integer chatId) {
-        List<Message> tempList = messageRepository.findAllByChatId(chatId, Sort.by(Sort.Direction.DESC, "time"));
+        List<Message> tempList = messageRepository.findAllByChatId(chatId, Sort.by(Sort.Direction.DESC, "sendTime"));
         List<MessageView> responseList = new ArrayList<>();
-        for (Message tempMessage: tempList) {
-            responseList.add(new MessageView(tempMessage));
+        long currentTimeSec = System.currentTimeMillis() / 1000;
+        for (Message message : tempList) {
+            if (message.getSendTimeSec() <= currentTimeSec) {
+                responseList.add(new MessageView(message));
+            }
         }
+
+        return responseList;
+    }
+
+    public void deleteOldMessages() {
+        List<Message> tempList = messageRepository.findAll();
+        List<Integer> deletedMessagesIdsList = new ArrayList<>();
+        long currentTimeSec = System.currentTimeMillis() / 1000;
+        for (Message tempMessage : tempList) {
+            long currentMessageLifeTime = currentTimeSec - tempMessage.getSendTimeSec(); // sendTimeSec is always not null
+            Long messageLifeTimeSec = tempMessage.getLifetimeSec();
+            if (messageLifeTimeSec != null && currentMessageLifeTime >= messageLifeTimeSec) { // If lifeTimeSec not specified
+                deletedMessagesIdsList.add(tempMessage.getMessageId());
+            }
+        }
+        if (!deletedMessagesIdsList.isEmpty()) {
+            messageRepository.deleteAllById(deletedMessagesIdsList);
+        }
+    }
+
+    public List<MessageView> readMessages(User someUser, Integer chatId) {
+        List<Message> chatMessagesList = messageRepository.findAllByChatId(chatId, Sort.by(Sort.Direction.DESC, "sendTime"));
+        List<MessageView> responseList = new ArrayList<>();
+        for (Message someMessage : chatMessagesList) {
+            if (someMessage.getUsersWhoDidNotRead().remove(someUser)) {
+                responseList.add(new MessageView(someMessage));
+            }
+        }
+        messageRepository.saveAll(chatMessagesList);
+
         return responseList;
     }
 }

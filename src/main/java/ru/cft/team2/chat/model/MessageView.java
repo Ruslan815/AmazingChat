@@ -27,18 +27,18 @@ public class MessageView {
             required = true,
             example = "2021-07-12 17:50:00"
     )
-    private String time;
+    private String sendTime;
 
     public MessageView(Message message) {
         this.setUserId(message.getUserId());
         this.setText(message.getText());
-        this.setTime(message.getTime());
+        this.setSendTime(message.getSendTime());
     }
 
-    public MessageView(Integer userId, String text, String time) {
+    public MessageView(Integer userId, String text, String sendTime) {
         this.userId = userId;
         this.text = text;
-        this.time = time;
+        this.sendTime = sendTime;
     }
 
     public Integer getUserId() {
@@ -57,12 +57,21 @@ public class MessageView {
         this.text = text;
     }
 
-    public String getTime() {
-        return time;
+    public String getSendTime() {
+        return sendTime;
     }
 
-    public void setTime(String time) {
-        this.time = time;
+    public void setSendTime(String sendTime) {
+        this.sendTime = sendTime;
+    }
+
+    @Override
+    public String toString() {
+        return "MessageView{" +
+                "userId=" + userId +
+                ", text='" + text + '\'' +
+                ", sendTime='" + sendTime + '\'' +
+                '}';
     }
 
     @Override
@@ -70,11 +79,11 @@ public class MessageView {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         MessageView that = (MessageView) o;
-        return Objects.equals(userId, that.userId) && Objects.equals(text, that.text) && Objects.equals(time, that.time);
+        return Objects.equals(userId, that.userId) && Objects.equals(text, that.text) && Objects.equals(sendTime, that.sendTime);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(userId, text, time);
+        return Objects.hash(userId, text, sendTime);
     }
 }

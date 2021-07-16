@@ -4,7 +4,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 import javax.persistence.*;
-import java.util.Objects;
+import java.util.*;
 
 @Entity(name = "messages")
 @ApiModel(description = "Сообщение")
@@ -47,17 +47,44 @@ public class Message {
             required = true,
             example = "2021-07-12 17:46:00"
     )
-    private String time;
+    private String sendTime;
 
-    public Message(Integer messageId, Integer userId, Integer chatId, String text, String time) {
+    @Column(nullable = false)
+    @ApiModelProperty(
+            value = "Время отправки сообщения в секундах",
+            required = true,
+            example = "15"
+    )
+    private Long sendTimeSec;
+
+    @ApiModelProperty(
+            value = "Время жизни сообщения в секундах",
+            example = "10"
+    )
+    private Long lifetimeSec;
+
+    @ApiModelProperty(
+            value = "Количество секунд задержки отправки сообщения",
+            example = "10"
+    )
+    private Long delaySec;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @ApiModelProperty(
+            value = "Список пользователей чата, которые не прочитали данное сообщение"
+    )
+    private List<User> usersWhoDidNotRead = new ArrayList<>();
+
+    public Message(Integer messageId, Integer userId, Integer chatId, String text, String sendTime) {
         this.messageId = messageId;
         this.userId = userId;
         this.chatId = chatId;
         this.text = text;
-        this.time = time;
+        this.sendTime = sendTime;
     }
 
-    public Message() {}
+    public Message() {
+    }
 
     public Integer getMessageId() {
         return messageId;
@@ -91,12 +118,44 @@ public class Message {
         this.text = text;
     }
 
-    public String getTime() {
-        return time;
+    public String getSendTime() {
+        return sendTime;
     }
 
-    public void setTime(String time) {
-        this.time = time;
+    public void setSendTime(String sendTime) {
+        this.sendTime = sendTime;
+    }
+
+    public Long getSendTimeSec() {
+        return sendTimeSec;
+    }
+
+    public void setSendTimeSec(Long sendTimeSec) {
+        this.sendTimeSec = sendTimeSec;
+    }
+
+    public Long getLifetimeSec() {
+        return lifetimeSec;
+    }
+
+    public void setLifetimeSec(Long lifetimeSec) {
+        this.lifetimeSec = lifetimeSec;
+    }
+
+    public Long getDelaySec() {
+        return delaySec;
+    }
+
+    public void setDelaySec(Long delaySec) {
+        this.delaySec = delaySec;
+    }
+
+    public List<User> getUsersWhoDidNotRead() {
+        return usersWhoDidNotRead;
+    }
+
+    public void setUsersWhoDidNotRead(List<User> usersWhoDidNotRead) {
+        this.usersWhoDidNotRead = usersWhoDidNotRead;
     }
 
     @Override
@@ -106,7 +165,8 @@ public class Message {
                 ", userId=" + userId +
                 ", chatId=" + chatId +
                 ", text='" + text + '\'' +
-                ", time='" + time + '\'' +
+                ", sendTime='" + sendTime + '\'' +
+                ", sendTimeInMillis=" + sendTimeSec +
                 '}';
     }
 
@@ -115,11 +175,11 @@ public class Message {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Message message = (Message) o;
-        return Objects.equals(messageId, message.messageId) && Objects.equals(userId, message.userId) && Objects.equals(chatId, message.chatId) && Objects.equals(text, message.text) && Objects.equals(time, message.time);
+        return Objects.equals(messageId, message.messageId) && Objects.equals(userId, message.userId) && Objects.equals(chatId, message.chatId) && Objects.equals(text, message.text) && Objects.equals(sendTime, message.sendTime) && Objects.equals(sendTimeSec, message.sendTimeSec);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(messageId, userId, chatId, text, time);
+        return Objects.hash(messageId, userId, chatId, text, sendTime, sendTimeSec);
     }
 }

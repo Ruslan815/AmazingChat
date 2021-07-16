@@ -14,6 +14,8 @@ public enum ValidationResult {
     CHAT_NAME_NOT_FOUND,
     USER_ALREADY_IN_CHAT,
     USER_NOT_IN_CHAT,
+    MALFORMED_RSS_LINK,
+    URL_CONNECTION_FAILED,
     UNKNOWN_ERROR,
     NO_ERROR,
     ;

@@ -57,12 +57,12 @@ public class MessageServiceTest {
     @Test
     void getAllByChatIdSuccessful() {
         List<Message> list = new ArrayList<>();
-        list.add(new Message(messageId, userId, chatId, text, time));
-        list.add(new Message(messageId + 1, userId + 1, chatId, text, time));
+        Message someMessage = new Message(messageId, userId, chatId, text, time);
+        someMessage.setSendTimeSec(1L);
+        list.add(someMessage);
         List<MessageView> expectedList = new ArrayList<>();
         expectedList.add(new MessageView(userId, text, time));
-        expectedList.add(new MessageView(userId + 1, text, time));
-        Mockito.when(messageRepository.findAllByChatId(chatId, Sort.by(Sort.Direction.DESC, "time"))).thenReturn(list);
+        Mockito.when(messageRepository.findAllByChatId(chatId, Sort.by(Sort.Direction.DESC, "sendTime"))).thenReturn(list);
 
         List<MessageView> actualList = messageService.getAllByChatId(chatId);
 

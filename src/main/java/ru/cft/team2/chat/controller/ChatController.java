@@ -9,12 +9,14 @@ import io.swagger.annotations.ApiParam;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.cft.team2.chat.error.ValidationResult;
-import ru.cft.team2.chat.model.Chat;
-import ru.cft.team2.chat.model.ChatMember;
-import ru.cft.team2.chat.model.ChatView;
+import ru.cft.team2.chat.model.*;
+import ru.cft.team2.chat.parser.RSSFeedParser;
 import ru.cft.team2.chat.service.ChatService;
 import ru.cft.team2.chat.service.UserService;
 
+import javax.xml.stream.XMLStreamException;
+import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.List;
 
 @Api(tags = "Чаты")
@@ -31,19 +33,31 @@ public class ChatController {
     @PostMapping("/chat")
     @ApiOperation(
             value = "Создать чат",
-            notes = "Создается чат с указанным названием"
+            notes = "Создается чат с указанным названием и подпиской на RSS ленту (необязательно)"
     )
     public ResponseEntity<?> create(
-            @ApiParam(value = "Название чата", required = true)
+            @ApiParam(value = "Название чата, ссылка на RSS ленту (необязательно)", required = true)
             @RequestBody Chat someChat
     ) {
+        ResponseEntity responseEntity;
         ChatView response;
         try {
+            if(someChat.getRssLink() != null) {
+                RSSFeedParser parser = new RSSFeedParser(someChat.getRssLink());
+                parser.readFeed();
+            }
             response = chatService.create(someChat);
+            responseEntity = ResponseEntity.ok(response);
+        } catch (MalformedURLException e) {
+            responseEntity = ResponseEntity.internalServerError().body(ValidationResult.MALFORMED_RSS_LINK);
+        } catch (IOException e) {
+            responseEntity = ResponseEntity.internalServerError().body(ValidationResult.URL_CONNECTION_FAILED);
+        } catch (XMLStreamException e) {
+            responseEntity = ResponseEntity.internalServerError().body(ValidationResult.UNKNOWN_ERROR);
         } catch (Exception e) {
-            return ResponseEntity.internalServerError().body(ValidationResult.CHAT_NAME_NOT_FOUND);
+            responseEntity = ResponseEntity.internalServerError().body(ValidationResult.CHAT_NAME_NOT_FOUND);
         }
-        return ResponseEntity.ok(response);
+        return responseEntity;
     }
 
     @GetMapping("/chats")
@@ -54,7 +68,6 @@ public class ChatController {
     public List<ChatView> get() {
         return chatService.getAll();
     }
-
 
     @PostMapping("/chat/enter")
     @ApiOperation(

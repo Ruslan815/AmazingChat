@@ -12,7 +12,6 @@ import ru.cft.team2.chat.repository.UserRepository;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -82,10 +81,6 @@ public class UserServiceTest {
         User passedUser = new User(null, firstName, lastName);
         Mockito.when(userRepository.existsById(userId)).thenReturn(false);
 
-        Throwable thrown = assertThrows(Exception.class, () -> {
-            userService.update(passedUser, userId);
-        });
-
-        assertThat(thrown).isInstanceOf(Exception.class);
+        assertThrows(Exception.class, () -> userService.update(passedUser, userId));
     }
 }

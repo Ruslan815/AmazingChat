@@ -71,6 +71,38 @@ class ChatControllerTest {
     }
 
     @Test
+    void createFailedMalformedRssLink() {
+        Chat passedChat = new Chat(chatId, name);
+        passedChat.setRssLink("errorLink");
+        ResponseEntity expectedResponse = ResponseEntity.internalServerError().body(ValidationResult.MALFORMED_RSS_LINK);
+        try {
+            Mockito.when(chatService.create(passedChat)).thenThrow(Exception.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        ResponseEntity actualResponse = chatController.create(passedChat);
+
+        assertEquals(expectedResponse, actualResponse);
+    }
+
+    @Test
+    void createFailedUrlConnectionFailed() {
+        Chat passedChat = new Chat(chatId, name);
+        passedChat.setRssLink("https://somesite.su");
+        ResponseEntity expectedResponse = ResponseEntity.internalServerError().body(ValidationResult.URL_CONNECTION_FAILED);
+        try {
+            Mockito.when(chatService.create(passedChat)).thenThrow(Exception.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        ResponseEntity actualResponse = chatController.create(passedChat);
+
+        assertEquals(expectedResponse, actualResponse);
+    }
+
+    @Test
     void getSuccessful() {
         List<ChatView> expectedList = new ArrayList<>();
         expectedList.add(new ChatView(chatId, name));

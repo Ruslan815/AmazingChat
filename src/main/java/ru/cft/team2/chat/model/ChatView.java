@@ -21,9 +21,16 @@ public class ChatView {
     )
     private String name;
 
+    @ApiModelProperty(
+            value = "Ссылка на RSS ленту",
+            example = "https://somesite.su"
+    )
+    private String rssLink;
+
     public ChatView(Chat chat) {
         this.setChatId(chat.getChatId());
         this.setName(chat.getName());
+        this.setRssLink(chat.getRssLink());
     }
 
     public ChatView(Integer chatId, String name) {
@@ -45,6 +52,22 @@ public class ChatView {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getRssLink() {
+        return rssLink;
+    }
+
+    public void setRssLink(String rssLink) {
+        this.rssLink = rssLink;
+    }
+
+    @Override
+    public String toString() {
+        return "ChatView{" +
+                "chatId=" + chatId +
+                ", name='" + name + '\'' +
+                '}';
     }
 
     @Override

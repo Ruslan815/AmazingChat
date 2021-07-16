@@ -15,8 +15,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 @SpringBootTest
 public class ChatServiceTest {
@@ -53,22 +53,14 @@ public class ChatServiceTest {
     void createFailedNameIsNull() {
         Chat passedChat = new Chat(chatId, null);
 
-        Throwable thrown = assertThrows(Exception.class, () -> {
-            chatService.create(passedChat);
-        });
-
-        assertThat(thrown).isInstanceOf(Exception.class);
+        assertThrows(Exception.class, () -> chatService.create(passedChat));
     }
 
     @Test
     void createFailedNameIsEmpty() {
         Chat passedChat = new Chat(chatId, "");
 
-        Throwable thrown = assertThrows(Exception.class, () -> {
-            chatService.create(passedChat);
-        });
-
-        assertThat(thrown).isInstanceOf(Exception.class);
+        assertThrows(Exception.class, () -> chatService.create(passedChat));
     }
 
     @Test
@@ -95,10 +87,15 @@ public class ChatServiceTest {
         Chat returnedChat = new Chat(chatId, name);
         returnedChat.setChatMembers(new HashSet<>());
         Mockito.when(chatRepository.getById(chatId)).thenReturn(returnedChat);
-        Mockito.when(chatRepository.save(returnedChat)).thenReturn(null);
+        doAnswer(invocation -> {
+            Chat arg0 = invocation.getArgument(0);
+            assertEquals(returnedChat, arg0);
+            return null;
+        }).when(chatRepository).save(returnedChat);
 
         boolean actualResult = chatService.enterChat(passedUser, chatId);
 
+        verify(chatRepository, times(1)).save(returnedChat);
         assertTrue(actualResult);
     }
 
@@ -124,10 +121,15 @@ public class ChatServiceTest {
         users.add(passedUser);
         returnedChat.setChatMembers(users);
         Mockito.when(chatRepository.getById(chatId)).thenReturn(returnedChat);
-        Mockito.when(chatRepository.save(returnedChat)).thenReturn(null);
+        doAnswer(invocation -> {
+            Chat arg0 = invocation.getArgument(0);
+            assertEquals(returnedChat, arg0);
+            return null;
+        }).when(chatRepository).save(returnedChat);
 
         boolean actualResult = chatService.leaveChat(passedUser, chatId);
 
+        verify(chatRepository, times(1)).save(returnedChat);
         assertTrue(actualResult);
     }
 

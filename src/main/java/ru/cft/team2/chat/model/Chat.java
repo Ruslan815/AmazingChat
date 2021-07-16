@@ -20,13 +20,14 @@ public class Chat {
     )
     private Integer chatId;
 
-    @Column
     @ApiModelProperty(
             value = "Имя чата",
             required = true,
             example = "someName"
     )
     private String name;
+
+    private String rssLink;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @ApiModelProperty(
@@ -58,12 +59,29 @@ public class Chat {
         this.name = name;
     }
 
+    public String getRssLink() {
+        return rssLink;
+    }
+
+    public void setRssLink(String rssLink) {
+        this.rssLink = rssLink;
+    }
+
     public Set<User> getChatMembers() {
         return chatMembers;
     }
 
     public void setChatMembers(Set<User> chatMembers) {
         this.chatMembers = chatMembers;
+    }
+
+    @Override
+    public String toString() {
+        return "Chat{" +
+                "chatId=" + chatId +
+                ", name='" + name + '\'' +
+                ", chatMembers=" + chatMembers +
+                '}';
     }
 
     @Override

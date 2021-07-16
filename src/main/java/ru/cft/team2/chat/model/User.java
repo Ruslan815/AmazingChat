@@ -4,9 +4,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 @ApiModel(description = "Пользователь")
 @Entity(name = "users")
@@ -41,7 +39,14 @@ public class User {
     )
     private Set<Chat> availableChats = new HashSet<>();
 
-    public User() {}
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "usersWhoDidNotRead")
+    @ApiModelProperty(
+            value = "Список сообщений, которые не прочитал данный пользователь"
+    )
+    private List<Message> unreadMessages = new ArrayList<>();
+
+    public User() {
+    }
 
     public User(Integer id, String firstName, String lastName) {
         this.id = id;
@@ -79,6 +84,14 @@ public class User {
 
     public void setAvailableChats(Set<Chat> availableChats) {
         this.availableChats = availableChats;
+    }
+
+    public List<Message> getUnreadMessages() {
+        return unreadMessages;
+    }
+
+    public void setUnreadMessages(List<Message> unreadMessages) {
+        this.unreadMessages = unreadMessages;
     }
 
     @Override
