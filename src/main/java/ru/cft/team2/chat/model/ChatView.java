@@ -8,8 +8,7 @@ import java.util.Objects;
 
 @ApiModel(description = "Отображение чата")
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class
-ChatView {
+public class ChatView {
     @ApiModelProperty(
             value = "Идентификатор чата",
             required = true,

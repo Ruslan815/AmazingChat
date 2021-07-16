@@ -1,7 +1,6 @@
 package ru.cft.team2.chat.configuration;
 
 import org.springframework.context.annotation.Configuration;
-import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import ru.cft.team2.chat.model.ChatView;
@@ -16,7 +15,6 @@ import java.util.List;
 
 @Configuration
 @EnableScheduling
-@EnableAsync
 public class ScheduleConfig {
 
     private final MessageService messageService;
@@ -25,6 +23,11 @@ public class ScheduleConfig {
     public ScheduleConfig(MessageService messageService, ChatService chatService) {
         this.messageService = messageService;
         this.chatService = chatService;
+    }
+
+    @Scheduled(fixedDelay = 1000)
+    public void scheduledDatabaseUpdate() {
+        messageService.deleteOldMessages();
     }
 
     @Scheduled(fixedDelay = 600000)

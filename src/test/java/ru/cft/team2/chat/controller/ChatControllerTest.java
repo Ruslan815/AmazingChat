@@ -22,7 +22,6 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.eq;
 
-@SuppressWarnings("rawtypes")
 @SpringBootTest
 class ChatControllerTest {
 
@@ -38,7 +37,7 @@ class ChatControllerTest {
     private final Integer userId = 1;
     private final Integer chatId = 1;
     private final String name = "someName";
-    final ObjectMapper objectMapper = new ObjectMapper();
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Test
     void createSuccessfulPrivateChat() {

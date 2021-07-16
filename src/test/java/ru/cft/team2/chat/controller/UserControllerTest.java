@@ -82,7 +82,7 @@ class UserControllerTest {
 
     @Test
     void getSuccessful() {
-        Integer userId = 42;
+        int userId = 42;
         UserView expectedUser = new UserView(userId, "cat", "dog");
         ResponseEntity<?> expectedResponse = ResponseEntity.ok(expectedUser);
         Mockito.when(userService.getUserView(userId)).thenReturn(expectedUser);
@@ -92,7 +92,7 @@ class UserControllerTest {
 
     @Test
     void getFailed() {
-        Integer userId = 1337;
+        int userId = 1337;
         ResponseEntity<?> expectedResponse = ResponseEntity.internalServerError().body(ValidationResult.USER_NOT_FOUND);
         Mockito.when(userService.getUserView(userId)).thenThrow(NoSuchElementException.class);
         ResponseEntity<?> actualResponse = userController.get(userId);
@@ -101,7 +101,7 @@ class UserControllerTest {
 
     @Test
     void updateSuccessful() {
-        Integer userId = 1;
+        int userId = 1;
         User updatedUser = new User(null, "newCat", "newDog");
         UserView expectedUser = new UserView(userId, "newCat", "newDog");
         ResponseEntity<?> expectedResponse = ResponseEntity.ok(expectedUser);
@@ -116,7 +116,7 @@ class UserControllerTest {
 
     @Test
     void updateFailedUserNotFound() {
-        Integer userId = 1;
+        int userId = 1;
         User updatedUser = new User(null, "newCat", "newDog");
         ResponseEntity<?> expectedResponse = ResponseEntity.internalServerError().body(ValidationResult.USER_NOT_FOUND);
         try {
@@ -130,7 +130,7 @@ class UserControllerTest {
 
     @Test
     void updateFailedFirstnameNotFound() {
-        Integer userId = 1;
+        int userId = 1;
         User updatedUser = new User(null, null, "newDog");
         ResponseEntity<?> expectedResponse = ResponseEntity.internalServerError().body(ValidationResult.FIRSTNAME_NOT_FOUND);
         ResponseEntity<?> actualResponse = userController.update(userId, updatedUser);
@@ -139,7 +139,7 @@ class UserControllerTest {
 
     @Test
     void updateFailedLastnameNotFound() {
-        Integer userId = 1;
+        int userId = 1;
         User updatedUser = new User(null, "newCat", null);
         ResponseEntity<?> expectedResponse = ResponseEntity.internalServerError().body(ValidationResult.LASTNAME_NOT_FOUND);
         ResponseEntity<?> actualResponse = userController.update(userId, updatedUser);
@@ -148,7 +148,7 @@ class UserControllerTest {
 
     @Test
     void updateFailedFirstnameAndLastnameNotFound() {
-        Integer userId = 1;
+        int userId = 1;
         User updatedUser = new User(null, null, null);
         ResponseEntity<?> expectedResponse = ResponseEntity.internalServerError().body(ValidationResult.FIRSTNAME_AND_LASTNAME_NOT_FOUND);
         ResponseEntity<?> actualResponse = userController.update(userId, updatedUser);

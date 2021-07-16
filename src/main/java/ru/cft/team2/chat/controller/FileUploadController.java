@@ -12,7 +12,6 @@ public class FileUploadController {
 
     @PostMapping("/attach")
     public ResponseEntity<?> handleFileUpload(@ModelAttribute Attach attach) {
-        //attach.file.
         return ResponseEntity.ok(new AttachView(attach));
     }
 
