@@ -18,15 +18,18 @@ public class AttachService {
 
     public AttachView create(AttachRequest attachRequest) throws IOException {
         String fileName = attachRequest.getFile().getOriginalFilename();
-        while (attachRepository.existsByFileName(fileName)) {
-            fileName = "1" + fileName;
-        }
+        String fileEnding = ".anyType";
+        try {
+            fileEnding = fileName.substring(fileName.lastIndexOf('.'));
+        } catch (Exception ignored) {}
+        String newName = attachRepository.count() + fileEnding;
+
         byte[] fileByteArr = attachRequest.getFile().getBytes();
         Attach attach = new Attach(attachRequest.getUserId(), attachRequest.getChatId(),
-                fileByteArr, fileName, attachRequest.getFile().getContentType());
+                fileByteArr, newName, attachRequest.getFile().getContentType());
         attachRepository.save(attach);
 
-        return new AttachView(fileName);
+        return new AttachView(newName);
     }
 
     public Attach getByFileName(String fileName) {
