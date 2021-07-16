@@ -1,10 +1,15 @@
 package ru.cft.team2.chat.controller;
 
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import ru.cft.team2.chat.error.ValidationResult;
+import ru.cft.team2.chat.model.Attach;
 import ru.cft.team2.chat.model.AttachRequest;
 import ru.cft.team2.chat.service.AttachService;
 import ru.cft.team2.chat.service.ChatService;
@@ -26,7 +31,7 @@ public class AttachController {
     }
 
     @PostMapping("/attach")
-    public ResponseEntity<?> handleFileUpload(@ModelAttribute AttachRequest attach) {
+    public ResponseEntity<?> postAttach(@ModelAttribute AttachRequest attach) {
         Integer userId = attach.getUserId();
         Integer chatId = attach.getChatId();
         boolean isUserExist = userService.isUserExist(userId);
@@ -48,5 +53,20 @@ public class AttachController {
         }
 
         return responseEntity;
+    }
+
+    @GetMapping("/attach/{fileName}")
+    public ResponseEntity<?> getAttach(@PathVariable(name = "fileName") String fileName) {
+        Attach attach = attachService.getByFileName(fileName);
+        if (attach == null) {
+            return ResponseEntity.internalServerError().body(ValidationResult.FILE_NOT_FOUND);
+        }
+        String contentType = attach.getContentType();
+        byte[] content = attach.getFile();
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(contentType))
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + "\"")
+                .body(content);
     }
 }

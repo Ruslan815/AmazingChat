@@ -17,12 +17,19 @@ public class AttachService {
     }
 
     public AttachView create(AttachRequest attachRequest) throws IOException {
-        AttachView attachView = new AttachView(attachRequest);
+        String fileName = attachRequest.getFile().getOriginalFilename();
+        while (attachRepository.existsByFileName(fileName)) {
+            fileName = "1" + fileName;
+        }
         byte[] fileByteArr = attachRequest.getFile().getBytes();
         Attach attach = new Attach(attachRequest.getUserId(), attachRequest.getChatId(),
-                fileByteArr, attachView.getFileName(), attachRequest.getFile().getContentType());
+                fileByteArr, fileName, attachRequest.getFile().getContentType());
         attachRepository.save(attach);
 
-        return attachView;
+        return new AttachView(fileName);
+    }
+
+    public Attach getByFileName(String fileName) {
+        return attachRepository.findByFileName(fileName);
     }
 }

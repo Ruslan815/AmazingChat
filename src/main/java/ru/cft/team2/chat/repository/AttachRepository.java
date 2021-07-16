@@ -6,4 +6,6 @@ import ru.cft.team2.chat.model.Attach;
 
 @Repository
 public interface AttachRepository extends JpaRepository<Attach, Integer> {
+    boolean existsByFileName(String fileName);
+    Attach findByFileName(String fileName);
 }
